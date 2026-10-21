@@ -427,6 +427,17 @@ footer { padding: 70px 0 50px; border-top: 1px solid var(--line); }
 .modal p { color: var(--ink-2); }
 .modal pre { white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: rgba(0,0,0,.4); border: 1px solid var(--line); border-radius: 14px; padding: 14px; color: var(--ink-2); }
 .modal .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.modal .eyebrow { margin-bottom: 10px; }
+.modal .note { text-align: left; }
+.pay { display: grid; gap: 8px; margin-top: 16px; }
+.pay-row { display: grid; grid-template-columns: 110px 1fr auto; gap: 12px; align-items: center; min-height: 52px; padding: 8px 8px 8px 16px; border-radius: 14px; background: rgba(255,255,255,.05); border: 1px solid var(--line); }
+.pay-row span { color: var(--dim); font-size: 13px; }
+.pay-row b { font-family: ui-monospace, Consolas, monospace; font-size: 15px; font-weight: 600; letter-spacing: .02em; overflow-wrap: anywhere; }
+.pay-row .btn { justify-self: end; }
+@media (max-width: 520px) {
+  .pay-row { grid-template-columns: 1fr auto; }
+  .pay-row span { grid-column: 1 / -1; margin-bottom: -6px; }
+}
 .lightbox { position: fixed; inset: 0; z-index: 99; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.85); opacity: 0; pointer-events: none; transition: opacity .4s; }
 .lightbox.on { opacity: 1; pointer-events: auto; }
 .lightbox img { max-height: 90vh; border-radius: 18px; box-shadow: 0 40px 120px rgba(0,0,0,.8); }

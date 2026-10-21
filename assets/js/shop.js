@@ -88,7 +88,7 @@
       b.textContent = inCart ? 'В корзине ✓' : 'В корзину';
     });
     $('#checkout').disabled = cart.length === 0;
-    $('#payNote').textContent = cfg.yoomoneyWallet ? 'Оплата картой через ЮMoney. Чек придёт на почту.' : 'После оформления вы получите код заказа для отправки продавцу.';
+    $('#payNote').textContent = cfg.yoomoneyWallet ? 'Оплата картой через ЮMoney. Чек придёт на почту.' : 'Оплата переводом на карту или по СБП. После перевода отправьте чек — мы проверим и выдадим покупку.';
   }
 
   const overlay = $('#overlay'), drawer = $('#drawer'), modal = $('#modal');
@@ -166,20 +166,63 @@
       return;
     }
 
-    const links = [];
-    if (cfg.telegram) links.push(`<a class="btn primary" href="${cfg.telegram}" target="_blank" rel="noopener">Отправить в Telegram</a>`);
-    if (cfg.discord) links.push(`<a class="btn ghost" href="${cfg.discord}" target="_blank" rel="noopener">Discord</a>`);
+    showPayment({ id, nick, sum, summary });
+  });
+
+  // ------------------------------------------------------------ manual payment: transfer + receipt
+  const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function payRow(label, value, copy) {
+    const btn = copy == null ? '' : `<button class="btn ghost sm" data-copy="${esc(copy)}">Копировать</button>`;
+    return `<div class="pay-row"><span>${label}</span><b>${esc(value)}</b>${btn}</div>`;
+  }
+  function showPayment(o) {
+    const p = cfg.pay || {};
+    const rows = [];
+    if (p.bank) rows.push(payRow('Банк', p.bank));
+    if (p.card) rows.push(payRow('Карта', p.card, p.card.replace(/\s+/g, '')));
+    if (p.phone) rows.push(payRow('СБП', p.phone, p.phone.replace(/[^\d+]/g, '')));
+    if (p.recipient) rows.push(payRow('Получатель', p.recipient));
+    rows.push(payRow('Сумма', `${o.sum} ${cur}`, String(o.sum)));
+    rows.push(payRow('Комментарий', o.id, o.id));
+    const hasDetails = !!(p.card || p.phone);
     modal.innerHTML = `
-      <h3>Заказ ${id} оформлен</h3>
-      <p>Скопируйте данные заказа и отправьте продавцу${cfg.telegram ? ' в Telegram' : ''}. После оплаты покупка будет привязана к нику <b>${nick}</b> и появится в игре автоматически.</p>
-      <pre id="orderText"></pre>
-      <div class="row"><button class="btn ghost" id="copyOrder">Скопировать заказ</button>${links.join('')}<button class="btn ghost" id="closeModal">Закрыть</button></div>`;
-    $('#orderText').textContent = summary;
+      <span class="eyebrow">Шаг 1 из 2</span>
+      <h3>Оплата заказа ${o.id}</h3>
+      <p>${hasDetails ? 'Переведите сумму по реквизитам и <b>обязательно укажите код заказа в комментарии</b> к переводу — так мы найдём ваш платёж.' : 'Реквизиты для перевода пришлёт продавец в Telegram. Напишите ему код заказа.'}</p>
+      <div class="pay">${rows.join('')}</div>
+      <div class="row"><button class="btn primary" id="paid">Я оплатил — отправить чек</button><button class="btn ghost" id="closeModal">Отмена</button></div>`;
     drawer.classList.remove('on');
     overlay.classList.add('on');
     modal.classList.add('on');
-    $('#copyOrder').addEventListener('click', async () => { await window.vvCopy(summary); window.vvToast('Заказ скопирован'); });
     $('#closeModal').addEventListener('click', window.vvCloseAll);
+    $('#paid').addEventListener('click', () => showReceipt(o));
+  }
+  function showReceipt(o) {
+    window.vvCopy(o.summary);
+    const tg = cfg.telegram ? `<a class="btn primary" href="${esc(cfg.telegram)}" target="_blank" rel="noopener">Открыть Telegram</a>` : '';
+    modal.innerHTML = `
+      <span class="eyebrow">Шаг 2 из 2</span>
+      <h3>Отправьте чек</h3>
+      <p>Сделайте скриншот чека из приложения банка и отправьте его продавцу${cfg.telegram ? ' в Telegram' : ''} вместе с текстом заказа — он уже скопирован, просто вставьте его в чат.</p>
+      <pre id="orderText"></pre>
+      <div class="row">${tg}<button class="btn ghost" id="copyOrder">Скопировать ещё раз</button><button class="btn ghost" id="done">Готово</button></div>
+      <p class="note">Проверка чека обычно занимает до 24 часов. После подтверждения косметика сама появится в игре на нике <b>${esc(o.nick)}</b>, а клиент пришлют в чат.</p>`;
+    $('#orderText').textContent = o.summary;
+    $('#copyOrder').addEventListener('click', async () => { await window.vvCopy(o.summary); window.vvToast('Заказ скопирован'); });
+    $('#done').addEventListener('click', () => {
+      cart = [];
+      save();
+      render();
+      window.vvCloseAll();
+      window.vvToast('Спасибо! Ждите подтверждения чека.');
+    });
+    window.vvToast('Текст заказа скопирован');
+  }
+  modal.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-copy]');
+    if (!b) return;
+    await window.vvCopy(b.dataset.copy);
+    window.vvToast('Скопировано');
   });
 
   if (location.hash === '#thanks') {
