@@ -47,9 +47,10 @@ def post(url, params, token=None):
         return {'error': f'curl: {e}'}
     body = out.stdout.decode('utf-8', 'replace')
     try:
-        return json.loads(body)
+        res = json.loads(body)
     except ValueError:
-        return {'error': f'нет ответа от ЮMoney (curl {out.returncode}): {body[:200]}'}
+        res = None
+    return res if isinstance(res, dict) else {'error': f'нет ответа от ЮMoney (curl {out.returncode}): {body[:200]}'}
 
 
 def wait_for_code(port=8765, timeout=20 * 60):
