@@ -73,7 +73,7 @@
       b.textContent = inCart ? 'В корзине ✓' : 'В корзину';
     });
     $('#checkout').disabled = cart.length === 0;
-    $('#payNote').textContent = cfg.yoomoneyWallet ? 'Оплата картой любого банка через ЮMoney. Покупка выдаётся автоматически за 5–15 минут.' : 'Оплата переводом на карту. Код заказа в комментарии — и мы выдадим покупку.';
+    $('#payNote').textContent = cfg.yoomoneyWallet ? 'Оплата картой любого банка через ЮMoney. Покупка выдаётся автоматически, обычно за 5–30 минут.' : 'Оплата переводом на карту. Код заказа в комментарии — и мы выдадим покупку.';
   }
 
   const overlay = $('#overlay'), drawer = $('#drawer'), modal = $('#modal');
@@ -223,7 +223,7 @@
     modal.innerHTML = `
       <span class="eyebrow">Оплата принята</span>
       <h3>Выдаём покупку</h3>
-      <p>Спасибо! Робот проверяет платежи каждые несколько минут и сам привяжет покупку к нику <b>${esc(o.nick)}</b>. Обычно это занимает 5–15 минут. Страницу можно закрыть.</p>
+      <p>Спасибо! Робот проверяет платежи каждые несколько минут и сам привяжет покупку к нику <b>${esc(o.nick)}</b>. Обычно это занимает 5–30 минут. Страницу можно закрыть.</p>
       <div class="pay">${items}</div>
       <div class="wait" id="wait"><i></i><span>Ждём подтверждения платежа…</span></div>
       <div class="row" id="waitRow"><button class="btn ghost" id="closeModal">Закрыть</button></div>`;
@@ -252,7 +252,7 @@
         $('#wait').innerHTML = `<i></i><span>Платёж получен, но сумма меньше стоимости заказа. Напишите продавцу${cfg.telegram ? ` в <a href="${esc(cfg.telegram)}" target="_blank" rel="noopener">Telegram</a>` : ''} и укажите код ${esc(o.code)}.</span>`;
         return;
       }
-      if (Date.now() - started < 40 * 60 * 1000) setTimeout(check, 20000);
+      if (Date.now() - started < 90 * 60 * 1000) setTimeout(check, 20000);
     };
     check();
   }
