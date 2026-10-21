@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=5">
+<link rel="stylesheet" href="assets/css/style.css?v=6">
 </head>
 <body>
 <canvas id="bg" aria-hidden="true"></canvas>
@@ -209,11 +209,15 @@
         <div class="box glass reveal">
           <h3 style="font-family:var(--display);font-weight:600;margin:0">Как установить</h3>
           <ol>
+            <li><a href="#shop"><b>Купите клиент</b></a> на свой ник Minecraft — функции включаются только у купивших.</li>
             <li>Установите <b>Fabric Loader</b> для своей версии 1.21–1.21.11 (TLauncher, Modrinth, Prism — подойдёт любой).</li>
-            <li>Скачайте <b>Fabric API</b> под эту же версию.</li>
-            <li>Положите <b>VelikVisual.jar</b> и Fabric API в папку <code>.minecraft/mods</code>.</li>
-            <li>Запустите игру и нажмите <span class="kbd">Right Shift</span>.</li>
+            <li>Положите <b>VelikVisual.jar</b> и <b>Fabric API</b> под эту же версию в папку <code>.minecraft/mods</code>.</li>
+            <li>Запустите игру под этим ником и нажмите <span class="kbd">Right Shift</span>.</li>
           </ol>
+          <div class="row" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+            <a class="btn primary sm" href="https://github.com/welixx387/velikvisual/releases/latest/download/VelikVisual.jar">Скачать VelikVisual</a>
+            <a class="btn ghost sm" href="https://modrinth.com/mod/fabric-api/versions" target="_blank" rel="noopener">Fabric API</a>
+          </div>
         </div>
         <div class="box glass reveal d1">
           <h3 style="font-family:var(--display);font-weight:600;margin:0">Требования</h3>
@@ -237,6 +241,7 @@
         <details class="glass reveal"><summary>Это чит? Меня забанят?</summary><p>Нет. VelikVisual меняет только картинку у вас на экране: ничего не отправляет на сервер, не показывает игроков сквозь стены и не помогает в бою. Правила конкретного сервера всё равно стоит проверить.</p></details>
         <details class="glass reveal"><summary>Как оплатить?</summary><p>Добавьте товары в корзину, укажите ник и нажмите «Оформить заказ» — сайт покажет, как оплатить. Платёж проверяется автоматически.</p></details>
         <details class="glass reveal"><summary>Как получить косметику после оплаты?</summary><p>После подтверждения платежа покупка привязывается к нику, который вы указали при оформлении, и косметика сама включится в игре. Её увидят все игроки с VelikVisual.</p></details>
+        <details class="glass reveal"><summary>Можно скачать без покупки?</summary><p>Скачать файл может любой, но функции включаются только у ников, которые купили клиент. Без покупки VelikVisual ничего не меняет в игре и показывает подсказку, где его купить. После оплаты клиент активируется сам — переустанавливать ничего не нужно.</p></details>
         <details class="glass reveal"><summary>Подойдёт ли мне версия?</summary><p>Один файл работает на всех версиях от 1.21 до 1.21.11. Нужны Fabric Loader и Fabric API под вашу версию.</p></details>
         <details class="glass reveal"><summary>Можно ли поменять цвета?</summary><p>Да: в разделе «Клиент → Theme» есть 10 тем, включая свои цвета, стиль панелей (стекло или плоский), скругление, шрифт и прозрачность.</p></details>
         <details class="glass reveal"><summary>Где хранятся конфиги?</summary><p>В папке <code>.minecraft/config/velikvisual/configs</code>. Любой конфиг превращается в короткий код VV1:… — им удобно делиться в чатах.</p></details>
@@ -275,10 +280,10 @@
 <div class="lightbox" id="lightbox"><img alt=""></div>
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/config.js?v=5"></script>
-<script src="assets/js/products.js?v=5"></script>
-<script src="assets/js/main.js?v=5"></script>
-<script src="assets/js/shop.js?v=5"></script>
-<script src="assets/js/configs.js?v=5"></script>
+<script src="assets/js/config.js?v=6"></script>
+<script src="assets/js/products.js?v=6"></script>
+<script src="assets/js/main.js?v=6"></script>
+<script src="assets/js/shop.js?v=6"></script>
+<script src="assets/js/configs.js?v=6"></script>
 </body>
 </html>

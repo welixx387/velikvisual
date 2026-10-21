@@ -8,7 +8,7 @@
  *  - grant — что записать игроку в api/cosmetics.json после оплаты.
  */
 window.VV_PRODUCTS = [
-  {"n":0,"id":"client","cat":"client","name":"VelikVisual Client","desc":"Клиент навсегда: все функции, обновления и поддержка версий 1.21–1.21.11.","price":299,"badge":"Хит","pv":"client","grant":{"client":"lifetime"}},
+  {"n":0,"id":"client","cat":"client","name":"VelikVisual Client","desc":"Активация клиента на ваш ник навсегда: все функции, обновления и поддержка версий 1.21–1.21.11.","price":299,"badge":"Хит","pv":"client","grant":{"client":"lifetime"}},
   {"n":1,"id":"cape-glass","cat":"cape","name":"Плащ «Стекло»","desc":"Прозрачный плащ с бегущим бликом и светящимися краями.","price":149,"pv":"cape glass","grant":{"cape":"glass"}},
   {"n":2,"id":"cape-night","cat":"cape","name":"Плащ «Ночь»","desc":"Чёрная ткань с мерцающими звёздами.","price":149,"pv":"cape night","grant":{"cape":"night"}},
   {"n":3,"id":"cape-theme","cat":"cape","name":"Плащ «Тема»","desc":"Переливается цветами вашей темы клиента.","price":199,"pv":"cape theme","grant":{"cape":"theme"}},

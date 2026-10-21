@@ -243,7 +243,7 @@
       if (st && st.status === 'granted') {
         const client = o.items.some((p) => p.grant.client);
         $('#wait').classList.add('ok');
-        $('#wait').innerHTML = `<i></i><span>Готово! Зайдите в игру — покупка появится в течение 5 минут.${client && !cfg.clientDownload ? ` За файлом клиента напишите продавцу${cfg.telegram ? ` <a href="${esc(cfg.telegram)}" target="_blank" rel="noopener">в Telegram</a>` : ''} и укажите код ${esc(o.code)}.` : ''}</span>`;
+        $('#wait').innerHTML = `<i></i><span>Готово! Зайдите в игру — покупка появится в течение 5 минут.${client && cfg.clientDownload ? ' Клиент активирован на ваш ник — скачайте его, если ещё не скачали.' : ''}${client && !cfg.clientDownload ? ` За файлом клиента напишите продавцу${cfg.telegram ? ` <a href="${esc(cfg.telegram)}" target="_blank" rel="noopener">в Telegram</a>` : ''} и укажите код ${esc(o.code)}.` : ''}</span>`;
         if (client && cfg.clientDownload) $('#waitRow').insertAdjacentHTML('afterbegin', `<a class="btn primary" href="${esc(cfg.clientDownload)}">Скачать клиент</a>`);
         return;
       }

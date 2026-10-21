@@ -6,7 +6,8 @@
  *   покупку. Вписывается автоматически скриптом tools/connect_yoomoney.py.
  * pay — запасной способ, пока автооплата не подключена: перевод на карту с кодом заказа
  *   в комментарии, выдача вручную на странице /admin.html.
- * clientDownload — ссылка на файл клиента; показывается покупателю после оплаты клиента.
+ * clientDownload — ссылка на файл клиента (последний релиз в репозитории). Скачать может любой,
+ *   но функции включаются только у ников, купивших клиент.
  * telegram / discord — ссылки для связи (подвал сайта).
  */
 window.VV_CONFIG = {
@@ -23,7 +24,7 @@ window.VV_CONFIG = {
     recipient: "",   // имя получателя, например "Иван И."
   },
 
-  clientDownload: "",
+  clientDownload: "https://github.com/welixx387/velikvisual/releases/latest/download/VelikVisual.jar",
 
   telegram: "",      // например "https://t.me/username"
   discord: "",
