@@ -208,6 +208,16 @@
 
   // ЮMoney OAuth: сюда возвращает после «Разрешить» (tools/connect_yoomoney.py)
   const qs = new URLSearchParams(location.search);
+  // admin.html#connect=<client_id>: код сразу уходит программе подключения на этом компьютере
+  // (python tools/connect_yoomoney.py --listen <client_id>), код ЮMoney живёт меньше минуты.
+  const cm = /^#connect=([0-9A-Fa-f]+)$/.exec(location.hash);
+  if (cm) {
+    try { sessionStorage.setItem('vvLocalConnect', '1'); } catch (e) { /* private mode */ }
+    location.replace(`https://yoomoney.ru/oauth/authorize?${new URLSearchParams({ client_id: cm[1], response_type: 'code', redirect_uri: `${location.origin}/admin.html`, scope: 'account-info operation-history' })}`);
+  }
+  let toLocal = false;
+  try { toLocal = sessionStorage.getItem('vvLocalConnect') === '1'; sessionStorage.removeItem('vvLocalConnect'); } catch (e) { /* private mode */ }
+  if (toLocal && (qs.has('code') || qs.has('error'))) location.replace(`http://127.0.0.1:8765/cb?${qs}`);
   if (qs.has('code') || qs.has('error')) {
     $('#oauth').hidden = false;
     if (qs.has('code')) $('#oauthCode').textContent = qs.get('code');

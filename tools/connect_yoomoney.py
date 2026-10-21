@@ -37,15 +37,53 @@ def post(url, params, token=None):
     if token:
         headers['Authorization'] = f'Bearer {token}'
     req = urllib.request.Request(url, data=urllib.parse.urlencode(params).encode(), headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.loads(r.read().decode('utf-8'))
-    except urllib.error.HTTPError as e:
-        body = e.read().decode('utf-8', 'replace')
+    for attempt in range(4):
         try:
-            return json.loads(body)
-        except ValueError:
-            return {'error': f'HTTP {e.code}: {body[:200]}'}
+            with urllib.request.urlopen(req, timeout=20) as r:
+                return json.loads(r.read().decode('utf-8'))
+        except urllib.error.HTTPError as e:
+            body = e.read().decode('utf-8', 'replace')
+            try:
+                return json.loads(body)
+            except ValueError:
+                return {'error': f'HTTP {e.code}: {body[:200]}'}
+        except (TimeoutError, urllib.error.URLError) as e:
+            # ЮMoney иногда не отвечает — пробуем ещё раз
+            if attempt == 3:
+                return {'error': f'нет ответа от ЮMoney ({e})'}
+
+
+def wait_for_code(port=8765, timeout=20 * 60):
+    """Принимает код от admin.html (редирект на http://127.0.0.1:8765/cb?code=...)."""
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    got = {}
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            if 'code' in q or 'error' in q:
+                got['code'] = (q.get('code') or [''])[0]
+                got['error'] = (q.get('error_description') or q.get('error') or [''])[0]
+            ok = bool(got.get('code'))
+            body = ('<!doctype html><meta charset="utf-8"><title>VelikVisual</title>'
+                    '<body style="background:#050506;color:#f4f4f6;font:18px system-ui;display:grid;place-items:center;height:100vh;margin:0">'
+                    f'<div>{"Готово! Доступ передан, автооплата подключается. Эту вкладку можно закрыть." if ok else "ЮMoney не дал доступ. Попробуйте ещё раз."}</div>')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(body.encode('utf-8'))
+
+        def log_message(self, *a):
+            pass
+
+    srv = HTTPServer(('127.0.0.1', port), Handler)
+    srv.timeout = 2
+    import time
+    end = time.time() + timeout
+    while 'code' not in got and time.time() < end:
+        srv.handle_request()
+    srv.server_close()
+    return got.get('code', ''), got.get('error', 'время ожидания вышло')
 
 
 def run(cmd, **kw):
@@ -59,27 +97,45 @@ def main():
         print('Нужен GitHub CLI (gh), вошедший в аккаунт welixx387: https://cli.github.com, затем `gh auth login`.')
         return 1
 
-    print(__doc__.split('Запуск:')[0])
-    print('Шаг 1. Зарегистрируйте приложение в ЮMoney (страница сейчас откроется):')
-    print('        Название ............ VelikVisual')
-    print(f'        Адрес сайта ......... {SITE}')
-    print('        Почта ............... ваша почта')
-    print(f'        Redirect URI ........ {REDIRECT}')
-    print('        Notification URI .... оставьте пустым')
-    print('        Галочку «Проверять подлинность приложения (OAuth2 client_secret)» НЕ ставьте.')
-    print('     Нажмите «Подтвердить» и скопируйте client_id.\n')
-    webbrowser.open('https://yoomoney.ru/myservices/new')
-    client_id = input('Вставьте client_id: ').strip()
-    if not client_id:
-        return 1
-    secret = input('client_secret (если ставили галочку; иначе просто Enter): ').strip()
+    # Без вопросов: connect_yoomoney.py <client_id> <код со страницы admin.html>
+    # или connect_yoomoney.py --listen <client_id>: ждёт код от admin.html#connect=<client_id>
+    args = sys.argv[1:]
+    listen = bool(args) and args[0] == '--listen'
+    if listen:
+        args = args[1:]
+    client_id = args[0].strip() if args else ''
+    code = args[1].strip() if len(args) > 1 else ''
+    secret = ''
+    if listen and client_id:
+        print(f'Жду подтверждения: откройте {REDIRECT}#connect={client_id} и нажмите «Продолжить».', flush=True)
+        code, error = wait_for_code()
+        if not code:
+            print(f'ЮMoney не дал доступ: {error}')
+            return 1
 
-    q = urllib.parse.urlencode({'client_id': client_id, 'response_type': 'code', 'redirect_uri': REDIRECT, 'scope': SCOPE})
-    print('\nШаг 2. В браузере нажмите «Разрешить». Откроется страница сайта с кодом — скопируйте его.')
-    webbrowser.open(f'https://yoomoney.ru/oauth/authorize?{q}')
-    code = input('Вставьте код со страницы: ').strip()
+    if not client_id:
+        print(__doc__.split('Запуск:')[0])
+        print('Шаг 1. Зарегистрируйте приложение в ЮMoney (страница сейчас откроется):')
+        print('        Название ............ VelikVisual')
+        print(f'        Адрес сайта ......... {SITE}')
+        print('        Почта ............... ваша почта')
+        print(f'        Redirect URI ........ {REDIRECT}')
+        print('        Notification URI .... оставьте пустым')
+        print('        Галочку «Проверять подлинность приложения (OAuth2 client_secret)» НЕ ставьте.')
+        print('     Нажмите «Подтвердить» и скопируйте client_id.\n')
+        webbrowser.open('https://yoomoney.ru/myservices/new')
+        client_id = input('Вставьте client_id: ').strip()
+        if not client_id:
+            return 1
+        secret = input('client_secret (если ставили галочку; иначе просто Enter): ').strip()
+
     if not code:
-        return 1
+        q = urllib.parse.urlencode({'client_id': client_id, 'response_type': 'code', 'redirect_uri': REDIRECT, 'scope': SCOPE})
+        print('\nШаг 2. В браузере нажмите «Разрешить». Откроется страница сайта с кодом — скопируйте его.')
+        webbrowser.open(f'https://yoomoney.ru/oauth/authorize?{q}')
+        code = input('Вставьте код со страницы: ').strip()
+        if not code:
+            return 1
 
     params = {'code': code, 'client_id': client_id, 'grant_type': 'authorization_code', 'redirect_uri': REDIRECT}
     if secret:
