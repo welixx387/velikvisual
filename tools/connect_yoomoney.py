@@ -33,24 +33,23 @@ for stream in (sys.stdout, sys.stderr):
 
 
 def post(url, params, token=None):
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    # Через curl: Python на некоторых компьютерах зависает на запросах к ЮMoney.
+    # Настройки передаются через stdin, чтобы токен не попадал в командную строку.
+    def q(v):
+        return '"' + v.replace('\\', '\\\\').replace('"', '\\"') + '"'
+    conf = [f'url = {q(url)}', 'request = "POST"', 'header = "Content-Type: application/x-www-form-urlencoded"',
+            f'data = {q(urllib.parse.urlencode(params))}', 'silent', 'max-time = 30', 'retry = 3', 'retry-all-errors']
     if token:
-        headers['Authorization'] = f'Bearer {token}'
-    req = urllib.request.Request(url, data=urllib.parse.urlencode(params).encode(), headers=headers)
-    for attempt in range(4):
-        try:
-            with urllib.request.urlopen(req, timeout=20) as r:
-                return json.loads(r.read().decode('utf-8'))
-        except urllib.error.HTTPError as e:
-            body = e.read().decode('utf-8', 'replace')
-            try:
-                return json.loads(body)
-            except ValueError:
-                return {'error': f'HTTP {e.code}: {body[:200]}'}
-        except (TimeoutError, urllib.error.URLError) as e:
-            # ЮMoney иногда не отвечает — пробуем ещё раз
-            if attempt == 3:
-                return {'error': f'нет ответа от ЮMoney ({e})'}
+        conf.append(f'header = {q("Authorization: Bearer " + token)}')
+    try:
+        out = subprocess.run(['curl', '-K', '-'], input='\n'.join(conf).encode('utf-8'), capture_output=True, timeout=150)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return {'error': f'curl: {e}'}
+    body = out.stdout.decode('utf-8', 'replace')
+    try:
+        return json.loads(body)
+    except ValueError:
+        return {'error': f'нет ответа от ЮMoney (curl {out.returncode}): {body[:200]}'}
 
 
 def wait_for_code(port=8765, timeout=20 * 60):
@@ -146,26 +145,27 @@ def main():
         print(f'ЮMoney не выдал доступ: {res.get("error", res)}. Код одноразовый — запустите скрипт ещё раз.')
         return 1
 
+    # сначала сохраняем доступ: код одноразовый, второй раз токен не получить
+    run(['gh', 'secret', 'set', 'YOOMONEY_TOKEN', '--repo', REPO], input=token.encode())
+    print('Доступ сохранён в секрет репозитория YOOMONEY_TOKEN.', flush=True)
+
     info = post('https://yoomoney.ru/api/account-info', {}, token)
     wallet = str(info.get('account', ''))
     if not re.fullmatch(r'\d{11,20}', wallet):
-        print(f'Не удалось узнать номер кошелька: {info}')
-        return 1
-    print(f'\nКошелёк: {wallet}')
+        print(f'Не удалось узнать номер кошелька: {info}. Впишите его в assets/js/config.js (yoomoneyWallet) вручную.')
+        return 2
+    print(f'Кошелёк: {wallet}', flush=True)
 
-    run(['gh', 'secret', 'set', 'YOOMONEY_TOKEN', '--repo', REPO], input=token.encode())
-    print('Доступ сохранён в секрет репозитория YOOMONEY_TOKEN.')
-
+    git = ['git', '-c', 'user.name=welixx387', '-c', 'user.email=welixx387@users.noreply.github.com']
+    run(['git', 'pull', '--rebase', '--autostash', '-q'])
     s = open(CONFIG, encoding='utf-8').read()
     s2 = re.sub(r'yoomoneyWallet:\s*"[^"]*"', f'yoomoneyWallet: "{wallet}"', s, count=1)
     if s2 != s:
         with open(CONFIG, 'w', encoding='utf-8', newline='\n') as f:
             f.write(s2)
-        git = ['git', '-c', 'user.name=welixx387', '-c', 'user.email=welixx387@users.noreply.github.com']
-        run(['git', 'pull', '--rebase', '-q'])
         run(git + ['commit', '-q', '-m', 'Enable ЮMoney auto payments', '--', 'assets/js/config.js'])
         run(['git', 'push', '-q'])
-        print('Номер кошелька вписан в config.js, сайт обновится через 1–2 минуты.')
+        print('Номер кошелька вписан в config.js, сайт обновится через 1–2 минуты.', flush=True)
 
     run(['gh', 'workflow', 'run', 'payments.yml', '--repo', REPO])
     print('\nГотово! Автооплата подключена: робот проверяет платежи каждые 5 минут и сам выдаёт покупки.')
