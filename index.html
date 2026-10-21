@@ -2,22 +2,281 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VelikVisual — скоро</title>
-<style>
-  :root { color-scheme: dark; }
-  html, body { height: 100%; margin: 0; background: #060607; color: #f4f4f6; font-family: system-ui, sans-serif; }
-  body { display: grid; place-items: center; }
-  .card { padding: 40px 56px; border-radius: 28px; text-align: center; background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(20px); }
-  h1 { margin: 16px 0 6px; font-size: 32px; letter-spacing: .02em; }
-  p { margin: 0; color: #9a9aa4; }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VelikVisual — визуальный клиент для Minecraft 1.21–1.21.11</title>
+<meta name="description" content="VelikVisual — стеклянный визуальный клиент для Minecraft 1.21–1.21.11 на Fabric: TargetHUD, TargetESP, JumpCircles, ChinaHat, плащи, крылья, питомцы и обмен конфигами.">
+<meta name="theme-color" content="#050506">
+<meta property="og:title" content="VelikVisual — визуальный клиент для Minecraft">
+<meta property="og:description" content="Стекло, свет и плавность. Один файл для всех версий 1.21–1.21.11.">
+<meta property="og:image" content="https://velikvisual.online/assets/img/shot-cosmetics.png">
+<link rel="icon" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/logo-256.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <div class="card">
-    <svg width="72" height="72" viewBox="0 0 128 128" aria-hidden="true"><defs><linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1c22"/><stop offset="1" stop-color="#0b0b0e"/></linearGradient><linearGradient id="r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity=".15"/></linearGradient></defs><rect x="4" y="4" width="120" height="120" rx="34" fill="url(#t)"/><rect x="5.5" y="5.5" width="117" height="117" rx="32.5" fill="none" stroke="url(#r)" stroke-width="3"/><path d="M94 35 64 96" stroke="#fff" stroke-opacity=".5" stroke-width="19" stroke-linecap="round"/><path d="M34 35 64 96" stroke="#fff" stroke-width="19" stroke-linecap="round"/><path d="M101 17l3.2 8.8 8.8 3.2-8.8 3.2-3.2 8.8-3.2-8.8-8.8-3.2 8.8-3.2z" fill="#fff"/></svg>
-    <h1>VelikVisual</h1>
-    <p>Сайт скоро откроется</p>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- shared SVG symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="wingFill" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".12"/>
+    </linearGradient>
+    <symbol id="wing" viewBox="0 0 100 100">
+      <path d="M100 50C80 20 40 8 6 14c24 8 40 16 52 24C36 34 16 38 2 48c22 2 42 4 58 6-20 6-38 16-50 30 24-8 46-18 62-24-8 12-14 22-16 34 14-12 26-24 44-44z" fill="url(#wingFill)" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<nav class="nav glass" id="nav">
+  <a class="brand" href="#top"><img src="assets/img/logo.svg" alt=""><span>VelikVisual</span></a>
+  <div class="links">
+    <a href="#features">Функции</a>
+    <a href="#showcase">Скриншоты</a>
+    <a href="#shop">Магазин</a>
+    <a href="#configs">Конфиги</a>
+    <a href="#install">Установка</a>
+    <a href="#faq">FAQ</a>
   </div>
+  <div class="right">
+    <button class="cart-btn" id="cartOpen" aria-label="Корзина">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <a class="btn primary sm" href="#shop">Купить</a>
+  </div>
+</nav>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="floor" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="prism-stage" aria-hidden="true">
+        <div class="glow-blob"></div>
+        <div class="prism" id="prism">
+          <div class="halo"></div>
+          <div class="layer" style="transform:translateZ(-22px);opacity:.18"><img src="assets/img/logo.svg" alt=""></div>
+          <div class="layer" style="transform:translateZ(-11px);opacity:.4"><img src="assets/img/logo.svg" alt=""></div>
+          <div class="layer"><img src="assets/img/logo.svg" alt=""></div>
+          <div class="orbit"><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <h1 class="title" id="title"><span class="w" data-split>VELIK</span><span class="w outline" data-split>VISUAL</span></h1>
+      <p class="lead">Визуальный клиент для Minecraft 1.21 — 1.21.11. Стекло, свет и плавные анимации&nbsp;— без читов и без лагов.</p>
+      <div class="cta">
+        <a class="btn primary" href="#shop">Купить клиент</a>
+        <a class="btn ghost" href="#showcase">Посмотреть в игре</a>
+      </div>
+      <div class="stats glass">
+        <div><b>1 файл</b><span>все версии 1.21–1.21.11</span></div>
+        <div><b>30+</b><span>визуальных функций</span></div>
+        <div><b>Fabric</b><span>дружит с Sodium и Iris</span></div>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"></div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="row" id="mq1"></div>
+    <div class="row rev" id="mq2"></div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="wrap">
+      <span class="eyebrow reveal">Функции</span>
+      <h2 class="h2 reveal">Всё, что видно —<br><span class="ghost">сделано красиво</span></h2>
+      <p class="sub reveal">Собственный рендер интерфейса со стеклянными панелями и сглаживанием, одинаковый на всех версиях от 1.21 до 1.21.11.</p>
+
+      <div class="bento">
+        <article class="tile glass spot t-a reveal">
+          <div class="demo">
+            <div class="thud glass">
+              <div class="head"></div>
+              <div><b>Target</b><small>16.0 HP · 2.4m</small><div class="hp"><i class="ghost"></i><i class="fill"></i></div></div>
+            </div>
+          </div>
+          <h3>TargetHUD и TargetESP</h3>
+          <p>Голова, здоровье с «призрачной» полоской урона, броня цели. На самой цели — круг, кольца или светящиеся призраки.</p>
+        </article>
+        <article class="tile glass spot t-b reveal d1">
+          <div class="demo"><div class="floorlet"><div class="plane"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div><div class="dot"></div></div></div>
+          <h3>JumpCircles, Trails, HitParticles</h3>
+          <p>Круги на земле при прыжке, светящийся след, частицы-сферы, звёзды, сердца и искры с настоящей физикой.</p>
+        </article>
+        <article class="tile glass spot t-c reveal">
+          <div class="demo">
+            <div class="mini-gui glass">
+              <aside><i></i><i></i><i></i><i></i><i></i></aside>
+              <main id="miniGui"><div class="card"><span></span><i class="sw on"></i></div><div class="card"><span></span><i class="sw"></i></div><div class="card"><span></span><i class="sw on"></i></div></main>
+            </div>
+          </div>
+          <h3>Меню на Right Shift</h3>
+          <p>Категории, поиск, слайдеры, выбор цвета, бинды и редактор HUD: перетаскивание и размер колесом мыши.</p>
+        </article>
+        <article class="tile glass spot t-d reveal d1">
+          <div class="demo">
+            <div class="cos-demo">
+              <div class="wing l"><svg><use href="#wing"/></svg></div>
+              <div class="wing r"><svg style="transform:scaleX(-1)"><use href="#wing"/></svg></div>
+              <div class="body"></div><div class="halo2"></div>
+            </div>
+          </div>
+          <h3>Косметика</h3>
+          <p>Плащи с физикой ткани, крылья, нимбы, питомцы и ауры. Их видят все игроки с VelikVisual.</p>
+        </article>
+        <article class="tile glass spot t-e reveal d2">
+          <div class="demo"><div class="codechip"><span class="typed">VV1:H4sIAAAAAAAA_6tWKk7NS0nNS1</span></div></div>
+          <h3>Конфиги и коды</h3>
+          <p>Сохраняйте настройки, делитесь коротким кодом и применяйте чужие сборки одним Ctrl+V.</p>
+        </article>
+        <article class="tile glass spot t-f reveal">
+          <div class="row2">
+            <div>
+              <h3 style="margin-top:0">Одна сборка — все версии</h3>
+              <p>Внутри jar лежат отдельные сборки под каждую ветку Minecraft, Fabric сам загружает нужную. Никаких «скачайте другую версию».</p>
+              <div class="versions"><span>1.21</span><span>1.21.1</span><span>1.21.2–3</span><span>1.21.4</span><span>1.21.5</span><span>1.21.6–8</span><span>1.21.9–10</span><span>1.21.11</span></div>
+            </div>
+            <div class="bignum">7&times;1<small>сборок в одном файле</small></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section id="showcase">
+    <div class="wrap">
+      <span class="eyebrow reveal">Скриншоты</span>
+      <h2 class="h2 reveal">Прямо из игры</h2>
+      <p class="sub reveal">Без монтажа: так выглядит клиент в Minecraft 1.21.11. Перетаскивайте ленту или жмите стрелки.</p>
+      <div class="gallery-nav reveal"><button class="round" id="gPrev" aria-label="Назад">&larr;</button><button class="round" id="gNext" aria-label="Вперёд">&rarr;</button></div>
+    </div>
+    <div class="gallery" id="gallery">
+      <figure class="shot glass"><img src="assets/img/shot-cosmetics.png" alt="Крылья, плащ и нимб" loading="lazy"><figcaption><b>Крылья «Ангел», стеклянный плащ, нимб</b><span>косметика</span></figcaption></figure>
+      <figure class="shot glass"><img src="assets/img/shot-gui.png" alt="Меню клиента" loading="lazy"><figcaption><b>Стеклянное меню</b><span>Right Shift</span></figcaption></figure>
+      <figure class="shot glass"><img src="assets/img/shot-combat.png" alt="TargetESP и TargetHUD" loading="lazy"><figcaption><b>TargetESP «Призраки» и TargetHUD</b><span>бой</span></figcaption></figure>
+      <figure class="shot glass"><img src="assets/img/shot-gui-cosmetics.png" alt="Раздел косметики" loading="lazy"><figcaption><b>Раздел косметики</b><span>стили и показ другим</span></figcaption></figure>
+      <figure class="shot glass"><img src="assets/img/shot-configs.png" alt="Конфиги" loading="lazy"><figcaption><b>Конфиги, пресеты, коды</b><span>обмен настройками</span></figcaption></figure>
+      <figure class="shot glass"><img src="assets/img/shot-front.png" alt="Аура и питомец" loading="lazy"><figcaption><b>Аура, питомец и атмосфера</b><span>ночь</span></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section id="shop">
+    <div class="wrap">
+      <div class="shop-head">
+        <div>
+          <span class="eyebrow reveal">Магазин</span>
+          <h2 class="h2 reveal">Клиент и <span class="ghost">косметика</span></h2>
+          <p class="sub reveal">Покупка привязывается к нику в Minecraft. Косметика появляется в игре автоматически — у вас и у всех, кто играет с VelikVisual.</p>
+        </div>
+        <div class="tabs glass reveal" id="tabs"></div>
+      </div>
+      <div class="products" id="products"></div>
+    </div>
+  </section>
+
+  <!-- CONFIGS -->
+  <section id="configs">
+    <div class="wrap">
+      <span class="eyebrow reveal">Конфиги</span>
+      <h2 class="h2 reveal">Готовые сборки <span class="ghost">сообщества</span></h2>
+      <p class="sub reveal">Скопируйте код, откройте меню клиента → «Конфиги» → «Вставить код». Свой конфиг можно прислать нам — лучшие попадут сюда.</p>
+      <div class="cfg-grid" id="cfgGrid"></div>
+      <div class="steps">
+        <div class="step glass reveal"><b>01</b><span>Скопируйте код конфига на сайте</span></div>
+        <div class="step glass reveal d1"><b>02</b><span>В игре нажмите <span class="kbd">Right Shift</span></span></div>
+        <div class="step glass reveal d2"><b>03</b><span>Откройте «Конфиги» в меню</span></div>
+        <div class="step glass reveal d3"><b>04</b><span>Нажмите «Вставить код» или <span class="kbd">Ctrl</span>+<span class="kbd">V</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install">
+    <div class="wrap">
+      <span class="eyebrow reveal">Установка</span>
+      <h2 class="h2 reveal">Две минуты <span class="ghost">до запуска</span></h2>
+      <div class="install">
+        <div class="box glass reveal">
+          <h3 style="font-family:var(--display);font-weight:600;margin:0">Как установить</h3>
+          <ol>
+            <li>Установите <b>Fabric Loader</b> для своей версии 1.21–1.21.11 (TLauncher, Modrinth, Prism — подойдёт любой).</li>
+            <li>Скачайте <b>Fabric API</b> под эту же версию.</li>
+            <li>Положите <b>VelikVisual.jar</b> и Fabric API в папку <code>.minecraft/mods</code>.</li>
+            <li>Запустите игру и нажмите <span class="kbd">Right Shift</span>.</li>
+          </ol>
+        </div>
+        <div class="box glass reveal d1">
+          <h3 style="font-family:var(--display);font-weight:600;margin:0">Требования</h3>
+          <ol style="list-style:none;padding:0">
+            <li>✓ Minecraft Java 1.21 — 1.21.11</li>
+            <li>✓ Fabric Loader 0.15+ и Fabric API</li>
+            <li>✓ Java 21 (лаунчер ставит сам)</li>
+            <li>✓ Совместим с Sodium, Iris, ModMenu</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <span class="eyebrow reveal">FAQ</span>
+      <h2 class="h2 reveal">Вопросы</h2>
+      <div class="faq">
+        <details class="glass reveal"><summary>Это чит? Меня забанят?</summary><p>Нет. VelikVisual меняет только картинку у вас на экране: ничего не отправляет на сервер, не показывает игроков сквозь стены и не помогает в бою. Правила конкретного сервера всё равно стоит проверить.</p></details>
+        <details class="glass reveal"><summary>Как получить косметику после оплаты?</summary><p>Укажите ник Minecraft при оформлении. Мы добавим покупку к нику, и косметика сама включится в игре в течение нескольких минут. Её увидят все игроки с VelikVisual.</p></details>
+        <details class="glass reveal"><summary>Подойдёт ли мне версия?</summary><p>Один файл работает на всех версиях от 1.21 до 1.21.11. Нужны Fabric Loader и Fabric API под вашу версию.</p></details>
+        <details class="glass reveal"><summary>Можно ли поменять цвета?</summary><p>Да: в разделе «Клиент → Theme» есть 10 тем, включая свои цвета, стиль панелей (стекло или плоский), скругление, шрифт и прозрачность.</p></details>
+        <details class="glass reveal"><summary>Где хранятся конфиги?</summary><p>В папке <code>.minecraft/config/velikvisual/configs</code>. Любой конфиг превращается в короткий код VV1:… — им удобно делиться в чатах.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="brand"><img src="assets/img/logo.svg" alt=""> VelikVisual</div>
+        <small>VelikVisual — неофициальная модификация. Не является продуктом Mojang Studios или Microsoft и не связана с ними. Minecraft — товарный знак Mojang Synergies AB.</small>
+      </div>
+      <div class="cta" style="opacity:1;animation:none" id="socials"></div>
+    </div>
+    <div class="giant" aria-hidden="true">VELIK</div>
+  </div>
+</footer>
+
+<!-- cart -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer glass" id="drawer" aria-label="Корзина">
+  <header><h3>Корзина</h3><button class="close" id="cartClose" aria-label="Закрыть">&times;</button></header>
+  <div class="items" id="items"></div>
+  <div>
+    <div class="field"><label for="nick">Ник в Minecraft</label><input id="nick" maxlength="16" placeholder="Например, Wel1xx" autocomplete="off"></div>
+    <div class="field"><label for="contact">Telegram или e-mail для связи</label><input id="contact" maxlength="64" placeholder="@username" autocomplete="off"></div>
+    <div class="total"><span>Итого</span><b id="total">0 ₽</b></div>
+    <button class="btn primary" style="width:100%" id="checkout">Оформить заказ</button>
+    <p class="note" id="payNote"></p>
+  </div>
+</aside>
+<div class="modal glass" id="modal" role="dialog" aria-modal="true"></div>
+<div class="lightbox" id="lightbox"><img alt=""></div>
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/shop.js"></script>
+<script src="assets/js/configs.js"></script>
 </body>
 </html>

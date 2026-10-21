@@ -1,0 +1,54 @@
+{
+  "configs": [
+    {
+      "name": "Glass PvP",
+      "author": "VelikVisual",
+      "tags": [
+        "PvP",
+        "Стекло"
+      ],
+      "desc": "Чистый стеклянный HUD, TargetHUD, круг на цели, искры при ударе и звук попадания.",
+      "code": "VV1:H4sIAAAAAAAC_4WSz04CMRDGX4X0zMnj3ogSMaghAeO5sLNs425r2kJCCAngUR-AeFLjA5AoBvnnK0zfyHZBE7Srhybb_ma-mf1m-qQLUjHBSXBQJKkIOwkoEvTJJdUgUyqv3AU4bSYQkkDLDgyK5CyLO2VK-2hNaCuofKhBZRt05eLIB89tXsRaNDf7UAqlYsrkL1gkCrRmvJ3l4aMZ4xyX5o4EBO_NEGdmZMakSHCCa3y1bIFTG7Mxw0L2MbUP810dW6gkUyFzutz-Qrle-6-JB5zhmy212jVhbvCFOPUK0zUqNWvtrP5L5Nn1iCucOpGJGeHCCt1mMlWWJOUogpb2mmWr1EWHhz5W4izNt7kKvSbj4T6LaKIcPOGRkNvkHN4FroXs_bTvK6AOyu2b0_HyhqQs8dc-jBmnFaq9sKRToa5jkOCXjSHNyJ69T3ZGW3OPE6qU25Dv3Sngh92LtY1Y2vPuBuDYzK7KEjd2BIPBJ7dfQAQ-AwAA"
+    },
+    {
+      "name": "Максимум",
+      "author": "VelikVisual",
+      "tags": [
+        "Красиво",
+        "Косметика"
+      ],
+      "desc": "Все визуалы, атмосфера светлячков, призраки на цели и вся купленная косметика.",
+      "code": "VV1:H4sIAAAAAAAC_4WTsU7DMBBA_8VzJ8ZsUamUUkCRCnR2m0t7wrGrs1NUVZGAAQYGPgGYWCukQgV8hP1HOBWwxIHFsu_lfHdPzootgDQqyaK9DitUVgrQLFqxETdABafz-gCSjwVkLDJUQtVhR7vvDlGbEB3Acowy0yGWKuOLBdEJpymY5HQ_BI99Xo4T3prdJaX1jCOFYF_myg9jdnM2cUyFopbCfbkAaRQtW_gQdK2vrhBsa4aSJzzo6aAs5l2kybfxhg_iKP4w1RumDdhhGoxBOd3l2Ue7sa92az9ZxOyDu_TbN7-u7bvdssrflKBJORls62GAQvTyHCYmiH36UJUyC07O5xCKj366a1zGRVBhCkF7cUk8GDeF0vMZEPxn59mu3ZW7tlt34-5qQ0_2xW584MPdu9tfR7HEov3dnSFc-N8BRBNW1Rdl-B1nXgMAAA"
+    },
+    {
+      "name": "Минимал",
+      "author": "VelikVisual",
+      "tags": [
+        "FPS",
+        "Минимум"
+      ],
+      "desc": "Только водяной знак и точка-прицел. Для слабых ПК и турниров.",
+      "code": "VV1:H4sIAAAAAAAC_5WRsU7DMBCG38VzJsZsKFRKKaBIacXsJpfmhGNX50ulqsrCwsIjsMATdEQUeAbnjXAiFoSDxGDJ1nf32ff7IHZAFo0W8VkkGlO2CqyID-JWMlAj6W44gJZrBaWImVqIhAVm1Juxzj339-7VnfpHEQv35Lcffr27ozuJrotEQsbaWiL9y_PiPvsH9-aOo-N6fNYVWv4hqaSy4PEC9mvUpQ3CzLCfLsyWkjbA6eoiSG98Z4WFnO6f68r4jHiML8DPqTE0pZ_rHWg2tJ8qyMEOHzNcEuRJjVqmMpzJZdtsE6Ti-zd_j04S1V-pzPIsSFPkTBLjpHmBSs2qCgq2U4LctLoMJ8aNsdsaCAK4674AKB5CHK4CAAA"
+    },
+    {
+      "name": "Velik Neon",
+      "author": "Wel1xx",
+      "tags": [
+        "PvP",
+        "Цвет"
+      ],
+      "desc": "Фиолетово-розовая тема Velik поверх PvP-сборки, призраки вместо круга.",
+      "code": "VV1:H4sIAAAAAAAC_4WSzU7CQBSFX4XMmpVLdgRJMKghAXU90Fs6oZ0xMwMJISTAVh-AuPEnPgALUeTPV7jzRs4UNEGnumjT9rv3nNtzZ0B6IBUTnBSO8iQRQTcGRQoDckU1yITKjnsBTpsxBKSgZReGeXKW1p0ypX20JrQVVD7UoLINunJx7IPnti9kLZrZXZJCqYgy-QvmiQKtGW-nffhoJrjAlbklBYJ3ZoRzMzYTkic4xQ2-WLbEma3ZmlEufZjZD4u9jzUqykTIjCl3v1Cu1_4b4gHn-Gqt1m6IezvEAt_sfWflXCpM16jUrLWP_C-xZzcrrnHmxKZmjEszMjepTJXFcTkMoaW9oVmXuujywMeKnCXZcVeh32Q8OGQhjZWDJzwUctecwXvAtZD9nzF-FdRBuXPndLy8ISmL_d6liHFaodoLizoR6joCCX7ZCJKUHMT7ZHe1C_cSYtZxJ-X7DOXwwy5tYytW9np3C3Bsbve4wq1dwXD4CQU4qLBGAwAA"
+    },
+    {
+      "name": "Obsidian",
+      "author": "Wel1xx",
+      "tags": [
+        "Тёмный",
+        "Плоский"
+      ],
+      "desc": "Плоские тёмные панели без стекла, минимум элементов.",
+      "code": "VV1:H4sIAAAAAAAC_5VSy0oDMRT9Fcl6EBFXs5NaaK2PQhXXaedO5-JMUpJMoZSCj4UbP0EQ-wUFKdS-_IXMH3kzuLCYEQwEkpyTk3tPzpgNQWmUgoWHActklKegWThmN9yAyri6dRsQvJtCxEKjcgiYBmNQ9EuefSse7MKuimcWMvtCyw3NtZ3ZFZtMAlZTUuuEo_qXztRuiye7tLNS47ws6wy12RGJeaqB4BaMuigi7QXb0lB3fuyKqz6YxvWJF72gmzH2ePX9pogleWRK-zz4scqkqpJviiEII9WoitAB7T7GPeLFawkK3uB-T07zbFBD1fv-zd-tK47pX67UO20v2kDT5spgpXIL07Qex9AzukqgI3MR-R0zmdSDBBT4S0sgK5Gd5Ezt3AWOcnPZ1RghFyz4kac9-0lp3BBpRfPDxeuVltvingK2oANHtsvirni07yXHJXjOwqP9gwmNLxDXyowjAwAA"
+    }
+  ]
+}

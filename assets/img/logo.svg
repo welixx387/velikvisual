@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="VelikVisual">
+  <defs>
+    <linearGradient id="vvTile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1c22"/><stop offset="1" stop-color="#0b0b0e"/></linearGradient>
+    <linearGradient id="vvSheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="vvRim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity=".15"/></linearGradient>
+    <linearGradient id="vvL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#c9c9d2"/></linearGradient>
+    <linearGradient id="vvR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="34" fill="url(#vvTile)"/>
+  <rect x="4" y="4" width="120" height="120" rx="34" fill="url(#vvSheen)"/>
+  <rect x="5.5" y="5.5" width="117" height="117" rx="32.5" fill="none" stroke="url(#vvRim)" stroke-width="3"/>
+  <path d="M94 35 64 96" stroke="url(#vvR)" stroke-width="19" stroke-linecap="round"/>
+  <path d="M34 35 64 96" stroke="url(#vvL)" stroke-width="19" stroke-linecap="round"/>
+  <path d="M101 17l3.2 8.8 8.8 3.2-8.8 3.2-3.2 8.8-3.2-8.8-8.8-3.2 8.8-3.2z" fill="#fff"/>
+</svg>
