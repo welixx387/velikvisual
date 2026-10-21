@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=4">
+<link rel="stylesheet" href="assets/css/style.css?v=5">
 <style>
   body { background: radial-gradient(120% 70% at 50% 0%, #15151a 0%, var(--bg) 60%); min-height: 100vh; }
   .adm { width: min(980px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 80px; }
@@ -57,15 +57,29 @@
     <a class="btn ghost sm" href="./">На сайт</a>
   </header>
 
-  <section class="card glass">
-    <h2><i>1</i>Проверьте платёж</h2>
-    <p>Покупатель присылает в Telegram скриншот чека и текст заказа. Откройте приложение банка и найдите входящий перевод: <b>сумма</b> и <b>код заказа</b> (VV-…) в комментарии должны совпасть с текстом заказа. Если перевода нет — не выдавайте.</p>
+  <section class="card glass" id="oauth" hidden>
+    <h2>Код подтверждения ЮMoney</h2>
+    <p id="oauthText">Скопируйте код и вставьте его в окно программы подключения (tools/connect_yoomoney.py).</p>
+    <pre class="json" id="oauthCode" style="white-space:pre-wrap;word-break:break-all"></pre>
+    <div class="actions"><button class="btn primary sm" id="oauthCopy">Скопировать код</button></div>
   </section>
 
   <section class="card glass">
-    <h2><i>2</i>Вставьте текст заказа</h2>
-    <p>Скопируйте сообщение покупателя целиком — страница сама найдёт ник и товары.</p>
-    <textarea id="order" placeholder="Заказ VV-ABC123&#10;Ник: Steve123&#10;Связь: @steve&#10;Товары: Крылья «Ангел»&#10;Сумма: 249 ₽&#10;Выдать: {&quot;wings&quot;:&quot;angel&quot;}"></textarea>
+    <h2>Автооплата</h2>
+    <p id="autoText">Робот проверяет платежи ЮMoney каждые 5 минут и сам выдаёт покупки. Здесь — последние заказы.</p>
+    <div class="players" id="autoOrders"></div>
+    <div class="actions"><a class="btn ghost sm" href="https://github.com/welixx387/velikvisual/actions/workflows/payments.yml" target="_blank" rel="noopener">Журнал робота</a></div>
+  </section>
+
+  <section class="card glass">
+    <h2><i>1</i>Проверьте перевод</h2>
+    <p>Это нужно только для переводов на карту (без автооплаты). Покупатель вставляет в комментарий к переводу код заказа вида <b>vv1.Ник.….….</b>. Найдите перевод в приложении банка: сумма должна совпасть с суммой заказа.</p>
+  </section>
+
+  <section class="card glass">
+    <h2><i>2</i>Вставьте код заказа</h2>
+    <p>Вставьте комментарий к переводу или сообщение покупателя целиком — страница сама найдёт ник, товары и сумму.</p>
+    <textarea id="order" placeholder="vv1.Steve123.j.ab12"></textarea>
     <div class="actions"><button class="btn primary sm" id="parse">Разобрать заказ</button></div>
     <div class="status" id="parseStatus"></div>
   </section>
@@ -105,6 +119,7 @@
 </main>
 <div class="toast" id="toast"></div>
 
+<script src="assets/js/products.js?v=5"></script>
 <script>
 (() => {
   const $ = (s) => document.querySelector(s);
@@ -178,21 +193,40 @@
 
   $('#parse').addEventListener('click', () => {
     const t = $('#order').value;
-    const nick = (t.match(/Ник:\s*([A-Za-z0-9_]{3,16})/) || [])[1];
-    let grant = null;
-    const g = t.match(/Выдать:\s*(\{[^\n]*\})/);
-    if (g) { try { grant = JSON.parse(g[1]); } catch (e) { grant = null; } }
-    const id = (t.match(/VV-[A-Z0-9]+/) || [])[0];
-    const sum = (t.match(/Сумма:\s*([\d\s]+)/) || [])[1];
-    if (!nick || !grant) {
-      $('#parseStatus').textContent = 'Не нашёл ник или строку «Выдать: {…}». Проверьте, что текст скопирован целиком.';
+    const found = (t.match(/vv1\.[A-Za-z0-9_]{3,16}\.[0-9a-z]+\.[0-9a-z]{2,8}/) || [])[0];
+    const o = window.VV_ORDER.decode(found);
+    if (!o) {
+      $('#parseStatus').textContent = 'Не нашёл код заказа вида vv1.Ник.….…. Проверьте, что он скопирован целиком.';
       return;
     }
-    $('#nick').value = nick;
+    const grant = Object.assign({}, ...o.items.map((p) => p.grant));
+    $('#nick').value = o.nick;
     form.querySelectorAll('select').forEach((s) => { s.value = grant[s.dataset.slot] || ''; });
     $('#client').checked = !!grant.client;
-    $('#parseStatus').textContent = `Заказ ${id || ''}: ник ${nick}, сумма ${sum ? sum.trim() + ' ₽' : '?'}. Проверьте поля ниже и нажмите «Добавить игроку».`;
+    $('#parseStatus').textContent = `Ник ${o.nick}: ${o.items.map((p) => p.name).join(', ')}. Сумма заказа ${o.sum} ₽ — сверьте с переводом и нажмите «Добавить игроку».`;
   });
+
+  // ЮMoney OAuth: сюда возвращает после «Разрешить» (tools/connect_yoomoney.py)
+  const qs = new URLSearchParams(location.search);
+  if (qs.has('code') || qs.has('error')) {
+    $('#oauth').hidden = false;
+    if (qs.has('code')) $('#oauthCode').textContent = qs.get('code');
+    else { $('#oauthText').textContent = `ЮMoney вернул ошибку: ${qs.get('error_description') || qs.get('error')}. Запустите подключение ещё раз.`; $('#oauthCopy').hidden = true; }
+    $('#oauthCopy').addEventListener('click', async () => { await copy(qs.get('code')); toast('Код скопирован'); });
+  }
+
+  async function loadOrders() {
+    try {
+      const r = await fetch(`api/orders.json?t=${Date.now()}`, { cache: 'no-store' });
+      const book = (await r.json()).orders || {};
+      const list = Object.entries(book).sort((a, b) => String(b[1].at).localeCompare(String(a[1].at))).slice(0, 20);
+      const name = (id) => (window.VV_PRODUCTS.find((p) => p.id === id) || { name: id }).name;
+      $('#autoOrders').innerHTML = list.length ? list.map(([code, o]) => `<div class="pl"><div><b>${o.nick} — ${o.status === 'granted' ? 'выдано' : 'сумма меньше цены, не выдано'}</b><small>${o.items.map(name).join(', ')} · ${new Date(o.at).toLocaleString('ru-RU')} · ${code}</small></div></div>`).join('') : '<p class="status">Автоматических заказов пока не было.</p>';
+    } catch (e) {
+      $('#autoOrders').innerHTML = '<p class="status">Не удалось загрузить api/orders.json.</p>';
+    }
+  }
+  loadOrders();
 
   $('#apply').addEventListener('click', () => {
     const nick = $('#nick').value.trim();

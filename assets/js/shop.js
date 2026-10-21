@@ -3,23 +3,8 @@
   const cur = cfg.currency || '₽';
   const $ = (s, r = document) => r.querySelector(s);
 
-  // grant: what gets written to api/cosmetics.json for the buyer's nickname
-  const PRODUCTS = [
-    { id: 'client', cat: 'client', name: 'VelikVisual Client', desc: 'Клиент навсегда: все функции, обновления и поддержка версий 1.21–1.21.11.', price: 299, badge: 'Хит', pv: 'client', grant: { client: 'lifetime' } },
-    { id: 'cape-glass', cat: 'cape', name: 'Плащ «Стекло»', desc: 'Прозрачный плащ с бегущим бликом и светящимися краями.', price: 149, pv: 'cape glass', grant: { cape: 'glass' } },
-    { id: 'cape-night', cat: 'cape', name: 'Плащ «Ночь»', desc: 'Чёрная ткань с мерцающими звёздами.', price: 149, pv: 'cape night', grant: { cape: 'night' } },
-    { id: 'cape-theme', cat: 'cape', name: 'Плащ «Тема»', desc: 'Переливается цветами вашей темы клиента.', price: 199, pv: 'cape theme', grant: { cape: 'theme' } },
-    { id: 'wings-angel', cat: 'wings', name: 'Крылья «Ангел»', desc: 'Белые стеклянные крылья, машут быстрее в прыжке.', price: 249, badge: 'New', pv: 'wings angel', grant: { wings: 'angel' } },
-    { id: 'wings-demon', cat: 'wings', name: 'Крылья «Демон»', desc: 'Чёрные перья с белой светящейся кромкой.', price: 249, pv: 'wings demon', grant: { wings: 'demon' } },
-    { id: 'halo-light', cat: 'halo', name: 'Нимб «Свет»', desc: 'Парящее кольцо света с двумя искрами.', price: 99, pv: 'halo', grant: { halo: 'light' } },
-    { id: 'halo-theme', cat: 'halo', name: 'Нимб «Тема»', desc: 'Нимб в цветах вашей темы.', price: 129, pv: 'halo theme', grant: { halo: 'theme' } },
-    { id: 'pet-orb', cat: 'pet', name: 'Питомец «Сфера»', desc: 'Светящийся шар-компаньон с тремя спутниками.', price: 149, pv: 'orb', grant: { pet: 'orb' } },
-    { id: 'pet-cube', cat: 'pet', name: 'Питомец «Куб»', desc: 'Вращающийся стеклянный куб.', price: 179, pv: 'cube', grant: { pet: 'cube' } },
-    { id: 'pet-crystal', cat: 'pet', name: 'Питомец «Кристалл»', desc: 'Парящий октаэдр-кристалл.', price: 199, pv: 'crystal', grant: { pet: 'crystal' } },
-    { id: 'aura-sparks', cat: 'aura', name: 'Аура «Искры»', desc: 'Искры поднимаются вокруг игрока.', price: 129, pv: 'aura', grant: { aura: 'sparks' } },
-    { id: 'aura-snow', cat: 'aura', name: 'Аура «Снег»', desc: 'Снежинки падают вокруг вас.', price: 129, pv: 'aura snow', grant: { aura: 'snow' } },
-    { id: 'bundle', cat: 'bundle', name: 'Набор «Всё и сразу»', desc: 'Клиент + плащ «Стекло» + крылья «Ангел» + нимб + питомец «Сфера» + аура.', price: 899, badge: 'Выгода 175 ₽', pv: 'bundle', grant: { client: 'lifetime', cape: 'glass', wings: 'angel', halo: 'light', pet: 'orb', aura: 'sparks' } },
-  ];
+  const PRODUCTS = window.VV_PRODUCTS || [];
+
   const CATS = [['all', 'Всё'], ['client', 'Клиент'], ['cape', 'Плащи'], ['wings', 'Крылья'], ['halo', 'Нимбы'], ['pet', 'Питомцы'], ['aura', 'Ауры'], ['bundle', 'Наборы']];
 
   const figure = (inner = '', back = false) => `<div class="pv-figure">${inner}<div class="headb"></div><div class="torso"></div><div class="legs"></div></div>`;
@@ -88,7 +73,7 @@
       b.textContent = inCart ? 'В корзине ✓' : 'В корзину';
     });
     $('#checkout').disabled = cart.length === 0;
-    $('#payNote').textContent = cfg.yoomoneyWallet ? 'Оплата картой через ЮMoney. Чек придёт на почту.' : 'Оплата переводом на карту или по СБП. После перевода отправьте чек — мы проверим и выдадим покупку.';
+    $('#payNote').textContent = cfg.yoomoneyWallet ? 'Оплата картой любого банка через ЮMoney. Покупка выдаётся автоматически за 5–15 минут.' : 'Оплата переводом на карту. Код заказа в комментарии — и мы выдадим покупку.';
   }
 
   const overlay = $('#overlay'), drawer = $('#drawer'), modal = $('#modal');
@@ -123,11 +108,13 @@
   });
 
   // ------------------------------------------------------------ checkout
+  // auto: ЮMoney + робот (.github/workflows/payments.yml) выдаёт покупку сам.
+  // manual: перевод на карту, код заказа в комментарии, выдача через admin.html.
+  const auto = !!cfg.yoomoneyWallet;
   const nickOk = (n) => /^[A-Za-z0-9_]{3,16}$/.test(n);
-  function orderId() {
-    const t = Date.now().toString(36).toUpperCase();
-    return `VV-${t.slice(-6)}`;
-  }
+  const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  if (auto) $('#contact').closest('.field').hidden = true;
+
   $('#checkout').addEventListener('click', () => {
     const nick = $('#nick').value.trim();
     const contact = $('#contact').value.trim();
@@ -136,25 +123,23 @@
       $('#nick').focus();
       return;
     }
-    if (!contact) {
+    if (!auto && !contact) {
       window.vvToast('Укажите Telegram или e-mail для связи');
       $('#contact').focus();
       return;
     }
-    const id = orderId();
+    const code = window.VV_ORDER.encode(nick, cart);
     const sum = cart.reduce((s, x) => s + byId(x).price, 0);
     const list = cart.map((x) => byId(x).name).join(', ');
-    const grant = Object.assign({}, ...cart.map((x) => byId(x).grant));
-    const summary = `Заказ ${id}\nНик: ${nick}\nСвязь: ${contact}\nТовары: ${list}\nСумма: ${sum} ${cur}\nВыдать: ${JSON.stringify(grant)}`;
 
-    if (cfg.yoomoneyWallet) {
+    if (auto) {
       const f = document.createElement('form');
       f.method = 'POST';
       f.action = 'https://yoomoney.ru/quickpay/confirm';
       const fields = {
-        receiver: cfg.yoomoneyWallet, 'quickpay-form': 'shop', targets: `VelikVisual: ${list}`.slice(0, 150),
-        paymentType: 'AC', sum: String(sum), label: `${id}|${nick}|${cart.join(',')}`.slice(0, 64),
-        successURL: `${cfg.siteUrl || location.origin}/#thanks`,
+        receiver: cfg.yoomoneyWallet, 'quickpay-form': 'button', targets: `VelikVisual: ${list}`.slice(0, 150),
+        paymentType: 'AC', sum: String(sum), label: code,
+        successURL: `${cfg.siteUrl || location.origin}/#paid=${code}`,
       };
       for (const [k, v] of Object.entries(fields)) {
         const i = document.createElement('input');
@@ -166,11 +151,11 @@
       return;
     }
 
-    showPayment({ id, nick, sum, summary });
+    const summary = `Заказ ${code}\nНик: ${nick}\nСвязь: ${contact}\nТовары: ${list}\nСумма: ${sum} ${cur}`;
+    showPayment({ code, nick, contact, sum, summary });
   });
 
-  // ------------------------------------------------------------ manual payment: transfer + receipt
-  const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // ------------------------------------------------------------ manual payment: transfer to card
   function payRow(label, value, copy) {
     const btn = copy == null ? '' : `<button class="btn ghost sm" data-copy="${esc(copy)}">Копировать</button>`;
     return `<div class="pay-row"><span>${label}</span><b>${esc(value)}</b>${btn}</div>`;
@@ -183,14 +168,14 @@
     if (p.phone) rows.push(payRow('СБП', p.phone, p.phone.replace(/[^\d+]/g, '')));
     if (p.recipient) rows.push(payRow('Получатель', p.recipient));
     rows.push(payRow('Сумма', `${o.sum} ${cur}`, String(o.sum)));
-    rows.push(payRow('Комментарий', o.id, o.id));
+    rows.push(payRow('Комментарий', o.code, o.code));
     const hasDetails = !!(p.card || p.phone);
     modal.innerHTML = `
       <span class="eyebrow">Шаг 1 из 2</span>
-      <h3>Оплата заказа ${o.id}</h3>
-      <p>${hasDetails ? 'Переведите сумму по реквизитам и <b>обязательно укажите код заказа в комментарии</b> к переводу — так мы найдём ваш платёж.' : 'Реквизиты для перевода пришлёт продавец в Telegram. Напишите ему код заказа.'}</p>
+      <h3>Оплата заказа</h3>
+      <p>${hasDetails ? 'Переведите сумму по реквизитам и <b>обязательно вставьте код заказа в комментарий</b> к переводу — по нему мы узнаем ваш ник и покупки.' : 'Реквизиты для перевода пришлёт продавец. Сохраните код заказа.'}</p>
       <div class="pay">${rows.join('')}</div>
-      <div class="row"><button class="btn primary" id="paid">Я оплатил — отправить чек</button><button class="btn ghost" id="closeModal">Отмена</button></div>`;
+      <div class="row"><button class="btn primary" id="paid">Я оплатил</button><button class="btn ghost" id="closeModal">Отмена</button></div>`;
     drawer.classList.remove('on');
     overlay.classList.add('on');
     modal.classList.add('on');
@@ -198,15 +183,17 @@
     $('#paid').addEventListener('click', () => showReceipt(o));
   }
   function showReceipt(o) {
-    window.vvCopy(o.summary);
-    const tg = cfg.telegram ? `<a class="btn primary" href="${esc(cfg.telegram)}" target="_blank" rel="noopener">Открыть Telegram</a>` : '';
+    const tg = cfg.telegram ? `<a class="btn primary" href="${esc(cfg.telegram)}" target="_blank" rel="noopener">Отправить чек в Telegram</a>` : '';
+    if (cfg.telegram) window.vvCopy(o.summary);
     modal.innerHTML = `
       <span class="eyebrow">Шаг 2 из 2</span>
-      <h3>Отправьте чек</h3>
-      <p>Сделайте скриншот чека из приложения банка и отправьте его продавцу${cfg.telegram ? ' в Telegram' : ''} вместе с текстом заказа — он уже скопирован, просто вставьте его в чат.</p>
+      <h3>Спасибо!</h3>
+      <p>${cfg.telegram
+        ? 'Отправьте продавцу в Telegram скриншот чека и текст заказа — он уже скопирован, просто вставьте его в чат.'
+        : `Мы найдём перевод по коду в комментарии и выдадим покупку. Если что-то будет не так, напишем вам: <b>${esc(o.contact)}</b>.`}</p>
       <pre id="orderText"></pre>
-      <div class="row">${tg}<button class="btn ghost" id="copyOrder">Скопировать ещё раз</button><button class="btn ghost" id="done">Готово</button></div>
-      <p class="note">Проверка чека обычно занимает до 24 часов. После подтверждения косметика сама появится в игре на нике <b>${esc(o.nick)}</b>, а клиент пришлют в чат.</p>`;
+      <div class="row">${tg}<button class="btn ghost" id="copyOrder">Скопировать заказ</button><button class="btn ghost" id="done">Готово</button></div>
+      <p class="note">Проверка перевода обычно занимает до 24 часов. После подтверждения косметика сама появится в игре на нике <b>${esc(o.nick)}</b>.</p>`;
     $('#orderText').textContent = o.summary;
     $('#copyOrder').addEventListener('click', async () => { await window.vvCopy(o.summary); window.vvToast('Заказ скопирован'); });
     $('#done').addEventListener('click', () => {
@@ -214,9 +201,9 @@
       save();
       render();
       window.vvCloseAll();
-      window.vvToast('Спасибо! Ждите подтверждения чека.');
+      window.vvToast('Спасибо! Ждите подтверждения.');
     });
-    window.vvToast('Текст заказа скопирован');
+    if (cfg.telegram) window.vvToast('Текст заказа скопирован');
   }
   modal.addEventListener('click', async (e) => {
     const b = e.target.closest('[data-copy]');
@@ -225,10 +212,52 @@
     window.vvToast('Скопировано');
   });
 
-  if (location.hash === '#thanks') {
+  // ------------------------------------------------------------ after ЮMoney: wait for the robot
+  function watchOrder(code) {
+    const o = window.VV_ORDER.decode(code);
+    if (!o) return;
     cart = [];
     save();
-    setTimeout(() => window.vvToast('Спасибо! Оплата получена — покупка появится в игре в течение нескольких минут.'), 600);
+    render();
+    const items = o.items.map((p) => payRow(p.name, `${p.price} ${cur}`)).join('');
+    modal.innerHTML = `
+      <span class="eyebrow">Оплата принята</span>
+      <h3>Выдаём покупку</h3>
+      <p>Спасибо! Робот проверяет платежи каждые несколько минут и сам привяжет покупку к нику <b>${esc(o.nick)}</b>. Обычно это занимает 5–15 минут. Страницу можно закрыть.</p>
+      <div class="pay">${items}</div>
+      <div class="wait" id="wait"><i></i><span>Ждём подтверждения платежа…</span></div>
+      <div class="row" id="waitRow"><button class="btn ghost" id="closeModal">Закрыть</button></div>`;
+    overlay.classList.add('on');
+    modal.classList.add('on');
+    $('#closeModal').addEventListener('click', window.vvCloseAll);
+    history.replaceState(null, '', location.pathname);
+
+    const started = Date.now();
+    const check = async () => {
+      if (!modal.classList.contains('on')) return;
+      let st = null;
+      try {
+        const r = await fetch(`api/orders.json?t=${Date.now()}`, { cache: 'no-store' });
+        st = ((await r.json()).orders || {})[o.code];
+      } catch (e) { /* retry later */ }
+      if (st && st.status === 'granted') {
+        const client = o.items.some((p) => p.grant.client);
+        $('#wait').classList.add('ok');
+        $('#wait').innerHTML = `<i></i><span>Готово! Зайдите в игру — покупка появится в течение 5 минут.${client && !cfg.clientDownload ? ` За файлом клиента напишите продавцу${cfg.telegram ? ` <a href="${esc(cfg.telegram)}" target="_blank" rel="noopener">в Telegram</a>` : ''} и укажите код ${esc(o.code)}.` : ''}</span>`;
+        if (client && cfg.clientDownload) $('#waitRow').insertAdjacentHTML('afterbegin', `<a class="btn primary" href="${esc(cfg.clientDownload)}">Скачать клиент</a>`);
+        return;
+      }
+      if (st) {
+        $('#wait').classList.add('bad');
+        $('#wait').innerHTML = `<i></i><span>Платёж получен, но сумма меньше стоимости заказа. Напишите продавцу${cfg.telegram ? ` в <a href="${esc(cfg.telegram)}" target="_blank" rel="noopener">Telegram</a>` : ''} и укажите код ${esc(o.code)}.</span>`;
+        return;
+      }
+      if (Date.now() - started < 40 * 60 * 1000) setTimeout(check, 20000);
+    };
+    check();
   }
+
   render();
+  const paid = /^#paid=(.+)$/.exec(location.hash);
+  if (paid) setTimeout(() => watchOrder(decodeURIComponent(paid[1])), 300);
 })();
