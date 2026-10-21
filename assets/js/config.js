@@ -14,7 +14,7 @@ window.VV_CONFIG = {
   siteUrl: "https://velikvisual.online",
 
   // Автооплата ЮMoney (номер кошелька). Пусто — используется перевод на карту из pay.
-  yoomoneyWallet: "",
+  yoomoneyWallet: "4100119663929263",
 
   // Перевод на карту (запасной способ). Пустые поля на сайте не показываются.
   pay: {
