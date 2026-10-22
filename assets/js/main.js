@@ -1,5 +1,7 @@
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // phones and tablets: lighter background, no mouse-only effects
+  const lite = matchMedia('(hover: none), (max-width: 640px)').matches;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
@@ -31,14 +33,16 @@
   const ctx = cv.getContext('2d');
   let W = 0, H = 0, dpr = 1;
   const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
-  const blobs = Array.from({ length: 5 }, (_, i) => ({
+  const blobs = Array.from({ length: lite ? 3 : 5 }, (_, i) => ({
     r: 260 + i * 70, sx: 0.00007 + i * 0.000025, sy: 0.00005 + i * 0.00003, ph: i * 1.7, a: 0.05 + (i % 2) * 0.03,
   }));
-  const dust = Array.from({ length: 140 }, () => ({
+  const dust = Array.from({ length: lite ? 50 : 140 }, () => ({
     x: Math.random(), y: Math.random(), z: 0.3 + Math.random() * 0.7, s: Math.random() * 6.28, v: 0.00002 + Math.random() * 0.00006,
   }));
   function resize() {
-    dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    // mobile browsers fire resize while the address bar hides on scroll; re-allocating the canvas then makes it flicker
+    if (W && innerWidth === W && Math.abs(innerHeight - H) < 160) return;
+    dpr = Math.min(lite ? 1 : 1.5, window.devicePixelRatio || 1);
     W = innerWidth; H = innerHeight;
     cv.width = W * dpr; cv.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -156,7 +160,8 @@
   const gal = $('#gallery');
   if (gal) {
     let down = false, sx = 0, sl = 0, moved = 0;
-    gal.addEventListener('pointerdown', (e) => { down = true; moved = 0; sx = e.clientX; sl = gal.scrollLeft; gal.classList.add('drag'); });
+    // drag-to-scroll is for the mouse only; touch already scrolls natively
+    gal.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; down = true; moved = 0; sx = e.clientX; sl = gal.scrollLeft; gal.classList.add('drag'); });
     addEventListener('pointerup', () => { down = false; gal.classList.remove('drag'); });
     gal.addEventListener('pointermove', (e) => {
       if (!down) return;
@@ -188,8 +193,16 @@
     soc.innerHTML = links.join('');
   }
 
+  // ------------------------------------------------------------ mobile menu
+  const nav = $('#nav'), burger = $('#burger');
+  const setMenu = (on) => { nav.classList.toggle('open', on); burger && burger.setAttribute('aria-expanded', String(on)); };
+  burger && burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  $$('#nav .links a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('click', (e) => { if (!nav.contains(e.target)) setMenu(false); });
+
   addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      setMenu(false);
       $('#lightbox')?.classList.remove('on');
       window.vvCloseAll && window.vvCloseAll();
     }
