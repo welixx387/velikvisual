@@ -5,11 +5,14 @@
 
   const PRODUCTS = window.VV_PRODUCTS || [];
 
-  const CATS = [['all', 'Всё'], ['client', 'Клиент'], ['cape', 'Плащи'], ['wings', 'Крылья'], ['halo', 'Нимбы'], ['pet', 'Питомцы'], ['aura', 'Ауры'], ['bundle', 'Наборы']];
+  const CATS = [['all', 'Всё'], ['client', 'Клиент'], ['cape', 'Плащи'], ['wings', 'Крылья'], ['halo', 'Нимбы'], ['hat', 'Головные уборы'], ['pet', 'Питомцы'], ['aura', 'Ауры'], ['bundle', 'Наборы']];
 
   const figure = (inner = '', back = false) => `<div class="pv-figure">${inner}<div class="headb"></div><div class="torso"></div><div class="legs"></div></div>`;
-  const wings = (cls) => `<div class="pv-wings ${cls}"><div class="wing l"><svg><use href="#wing"/></svg></div><div class="wing r"><svg style="transform:scaleX(-1)"><use href="#wing"/></svg></div></div>`;
-  const aura = (snow) => `<div class="pv-aura ${snow ? 'snow' : ''}">${Array.from({ length: 12 }, (_, i) => `<i style="left:${20 + (i * 53) % 60}%;animation-delay:${(i * 0.37) % 2.6}s"></i>`).join('')}</div>`;
+  const wings = (cls) => {
+    const sym = cls === 'butterfly' ? '#bfly' : '#wing';
+    return `<div class="pv-wings ${cls}"><div class="wing l"><svg><use href="${sym}"/></svg></div><div class="wing r"><svg style="transform:scaleX(-1)"><use href="${sym}"/></svg></div></div>`;
+  };
+  const aura = (style) => `<div class="pv-aura ${style || ''}">${Array.from({ length: 12 }, (_, i) => `<i style="left:${20 + (i * 53) % 60}%;animation-delay:${(i * 0.37) % 2.6}s"></i>`).join('')}</div>`;
   function preview(pv) {
     const [kind, style] = pv.split(' ');
     switch (kind) {
@@ -20,7 +23,10 @@
       case 'orb': return '<div class="pv-orb"></div>';
       case 'cube': return '<div class="pv-cube">' + '<i></i>'.repeat(6) + '</div>';
       case 'crystal': return '<div class="pv-crystal"><svg viewBox="0 0 64 100"><polygon points="32,2 62,50 32,98 2,50" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="1.6"/><polyline points="2,50 32,62 62,50" fill="none" stroke="#fff" stroke-opacity=".7"/><line x1="32" y1="2" x2="32" y2="62" stroke="#fff" stroke-opacity=".5"/><line x1="32" y1="62" x2="32" y2="98" stroke="#fff" stroke-opacity=".5"/></svg></div>';
-      case 'aura': return aura(style === 'snow') + figure();
+      case 'aura': return aura(style) + figure();
+      case 'star': return '<div class="pv-star"></div>';
+      case 'heart': return '<div class="pv-heart"></div>';
+      case 'hat': return figure(`<div class="pv-hat ${style}"><i></i><i></i></div>`);
       case 'bundle': return '<div class="pv-bundle"><div class="pv-orb"></div><img class="pv-client" style="width:90px;height:90px" src="assets/img/logo.svg" alt=""><div class="pv-cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>';
       default: return '';
     }

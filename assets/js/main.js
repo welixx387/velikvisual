@@ -140,7 +140,7 @@
   }, { passive: true });
 
   // ------------------------------------------------------------ marquee
-  const words = ['TargetESP', 'ChinaHat', 'JumpCircles', 'Trails', 'HitParticles', 'Плащи', 'Крылья', 'Питомцы', 'Конфиги', '1.21 — 1.21.11'];
+  const words = ['TargetESP', 'Шейдеры', 'JumpCircles', 'Своё небо', 'HitParticles', 'Свои плащи', 'Крылья', 'Hitboxes', 'Конфиги', '1.21 — 1.21.11'];
   const fill = (el, offset) => {
     if (!el) return;
     const html = words.map((w, i) => `<span class="${(i + offset) % 2 ? 'o' : ''}">${w}</span><span class="star">✦</span>`).join('');
@@ -191,6 +191,13 @@
     if (cfg.discord) links.push(`<a class="btn ghost sm" href="${cfg.discord}" target="_blank" rel="noopener">Discord</a>`);
     links.push('<a class="btn primary sm" href="#shop">Купить клиент</a>');
     soc.innerHTML = links.join('');
+  }
+
+  // ------------------------------------------------------------ language
+  const langBtn = $('#langBtn');
+  if (langBtn) {
+    langBtn.textContent = window.VV_LANG === 'en' ? 'RU' : 'EN';
+    langBtn.addEventListener('click', () => window.vvSetLang(window.VV_LANG === 'en' ? 'ru' : 'en'));
   }
 
   // ------------------------------------------------------------ mobile menu

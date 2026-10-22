@@ -14,7 +14,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=9">
+<link rel="stylesheet" href="assets/css/style.css?v=10">
+<script src="assets/js/i18n.js?v=10"></script>
 </head>
 <body>
 <canvas id="bg" aria-hidden="true"></canvas>
@@ -28,6 +29,14 @@
       <stop offset="0" stop-color="#fff" stop-opacity=".85"/>
       <stop offset="1" stop-color="#fff" stop-opacity=".12"/>
     </linearGradient>
+    <linearGradient id="bflyFill" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#39d2ff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#b46bff" stop-opacity=".55"/>
+    </linearGradient>
+    <symbol id="bfly" viewBox="0 0 100 100">
+      <path d="M98 50C90 30 70 6 40 8 18 10 12 30 30 44c-22-2-30 16-18 30 12 14 40 10 52-6 6 10 20 16 30 6 6-8 4-18 4-24z" fill="url(#bflyFill)" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+      <circle cx="36" cy="26" r="5" fill="#fff" fill-opacity=".8"/><circle cx="32" cy="66" r="4" fill="#fff" fill-opacity=".7"/>
+    </symbol>
     <symbol id="wing" viewBox="0 0 100 100">
       <path d="M100 50C80 20 40 8 6 14c24 8 40 16 52 24C36 34 16 38 2 48c22 2 42 4 58 6-20 6-38 16-50 30 24-8 46-18 62-24-8 12-14 22-16 34 14-12 26-24 44-44z" style="fill: var(--wf, url(#wingFill)); stroke: var(--ws, #fff)" stroke-width="1.6" stroke-linejoin="round"/>
     </symbol>
@@ -45,6 +54,7 @@
     <a href="#faq">FAQ</a>
   </div>
   <div class="right">
+    <button class="lang-btn" id="langBtn" aria-label="Language">EN</button>
     <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><i></i><i></i></button>
     <button class="cart-btn" id="cartOpen" aria-label="Корзина">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
@@ -245,6 +255,8 @@
         <details class="glass reveal"><summary>Можно скачать без покупки?</summary><p>Скачать файл может любой, но функции включаются только у ников, которые купили клиент. Без покупки VelikVisual ничего не меняет в игре и показывает подсказку, где его купить. После оплаты клиент активируется сам — переустанавливать ничего не нужно.</p></details>
         <details class="glass reveal"><summary>Подойдёт ли мне версия?</summary><p>Один файл работает на всех версиях от 1.21 до 1.21.11. Нужны Fabric Loader и Fabric API под вашу версию.</p></details>
         <details class="glass reveal"><summary>Можно ли поменять цвета?</summary><p>Да: в разделе «Клиент → Theme» есть 10 тем, включая свои цвета, стиль панелей (стекло или плоский), скругление, шрифт и прозрачность.</p></details>
+        <details class="glass reveal"><summary>Как поставить свой плащ или картинку в небо?</summary><p>Положите картинку в папку <code>.minecraft/config/velikvisual/capes</code> (плащи) или <code>.minecraft/config/velikvisual/sky</code> (небо) и выберите стиль «Своя картинка». Обычные картинки и стандартные текстуры плащей 64×32 подходят. Свой плащ сразу видите вы; чтобы его видели все, напишите нам.</p></details>
+        <details class="glass reveal"><summary>Какие шейдеры есть в клиенте?</summary><p>Модуль «Мир → Shaders»: пресеты «Яркий», «Кино», «Мечта», «Холод» и «Нуар» — цветокоррекция, мягкое свечение, виньетка и зернистость. Работают на всех версиях и вместе с Sodium.</p></details>
         <details class="glass reveal"><summary>Где хранятся конфиги?</summary><p>В папке <code>.minecraft/config/velikvisual/configs</code>. Любой конфиг превращается в короткий код VV1:… — им удобно делиться в чатах.</p></details>
       </div>
     </div>
@@ -281,10 +293,10 @@
 <div class="lightbox" id="lightbox"><img alt=""></div>
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/config.js?v=9"></script>
-<script src="assets/js/products.js?v=9"></script>
-<script src="assets/js/main.js?v=9"></script>
-<script src="assets/js/shop.js?v=9"></script>
-<script src="assets/js/configs.js?v=9"></script>
+<script src="assets/js/config.js?v=10"></script>
+<script src="assets/js/products.js?v=10"></script>
+<script src="assets/js/main.js?v=10"></script>
+<script src="assets/js/shop.js?v=10"></script>
+<script src="assets/js/configs.js?v=10"></script>
 </body>
 </html>

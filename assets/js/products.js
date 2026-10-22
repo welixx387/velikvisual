@@ -21,7 +21,20 @@ window.VV_PRODUCTS = [
   {"n":10,"id":"pet-crystal","cat":"pet","name":"Питомец «Кристалл»","desc":"Парящий октаэдр-кристалл.","price":199,"pv":"crystal","grant":{"pet":"crystal"}},
   {"n":11,"id":"aura-sparks","cat":"aura","name":"Аура «Искры»","desc":"Искры поднимаются вокруг игрока.","price":129,"pv":"aura","grant":{"aura":"sparks"}},
   {"n":12,"id":"aura-snow","cat":"aura","name":"Аура «Снег»","desc":"Снежинки падают вокруг вас.","price":129,"pv":"aura snow","grant":{"aura":"snow"}},
-  {"n":13,"id":"bundle","cat":"bundle","name":"Набор «Всё и сразу»","desc":"Клиент + плащ «Стекло» + крылья «Ангел» + нимб + питомец «Сфера» + аура.","price":899,"badge":"Выгода 175 ₽","pv":"bundle","grant":{"client":"lifetime","cape":"glass","wings":"angel","halo":"light","pet":"orb","aura":"sparks"}}
+  {"n":13,"id":"bundle","cat":"bundle","name":"Набор «Всё и сразу»","desc":"Клиент + плащ «Стекло» + крылья «Ангел» + нимб + питомец «Сфера» + аура.","price":899,"badge":"Выгода 175 ₽","pv":"bundle","grant":{"client":"lifetime","cape":"glass","wings":"angel","halo":"light","pet":"orb","aura":"sparks"}},
+  {"n":14,"id":"cape-aurora","cat":"cape","name":"Плащ «Аврора»","desc":"Переливается зелёным, бирюзовым и фиолетовым, как северное сияние.","price":199,"badge":"New","pv":"cape aurora","grant":{"cape":"aurora"}},
+  {"n":15,"id":"cape-flame","cat":"cape","name":"Плащ «Пламя»","desc":"Огненный градиент с мерцанием и искрами, летящими с края.","price":199,"pv":"cape flame","grant":{"cape":"flame"}},
+  {"n":16,"id":"wings-neon","cat":"wings","name":"Крылья «Неон»","desc":"Тёмные перья с пульсирующей бирюзово-розовой кромкой.","price":279,"badge":"New","pv":"wings neon","grant":{"wings":"neon"}},
+  {"n":17,"id":"wings-butterfly","cat":"wings","name":"Крылья «Бабочка»","desc":"Стеклянные крылья бабочки с градиентом и светящимися пятнами.","price":279,"pv":"wings butterfly","grant":{"wings":"butterfly"}},
+  {"n":18,"id":"halo-stars","cat":"halo","name":"Нимб «Звёздный»","desc":"Восемь звёздочек кружатся над головой.","price":149,"pv":"halo stars","grant":{"halo":"stars"}},
+  {"n":19,"id":"halo-double","cat":"halo","name":"Нимб «Двойной»","desc":"Два кольца, белое и в цвет темы, с искрами навстречу друг другу.","price":129,"pv":"halo double","grant":{"halo":"double"}},
+  {"n":20,"id":"pet-star","cat":"pet","name":"Питомец «Звезда»","desc":"Золотая звезда со спутниками-искрами.","price":179,"pv":"star","grant":{"pet":"star"}},
+  {"n":21,"id":"pet-heart","cat":"pet","name":"Питомец «Сердце»","desc":"Розовое сердце, которое бьётся.","price":179,"pv":"heart","grant":{"pet":"heart"}},
+  {"n":22,"id":"aura-hearts","cat":"aura","name":"Аура «Сердечки»","desc":"Сердечки поднимаются вокруг игрока.","price":149,"pv":"aura hearts","grant":{"aura":"hearts"}},
+  {"n":23,"id":"aura-flame","cat":"aura","name":"Аура «Пламя»","desc":"Языки огня и огненное кольцо у ног.","price":149,"pv":"aura flame","grant":{"aura":"flame"}},
+  {"n":24,"id":"hat-crown","cat":"hat","name":"Корона","desc":"Золотая корона с мерцающими камнями.","price":199,"badge":"New","pv":"hat crown","grant":{"hat":"crown"}},
+  {"n":25,"id":"hat-ears","cat":"hat","name":"Кошачьи ушки","desc":"Белые ушки с розовой серединкой, иногда подёргиваются.","price":149,"pv":"hat ears","grant":{"hat":"ears"}},
+  {"n":26,"id":"hat-horns","cat":"hat","name":"Рога","desc":"Изогнутые рога с красным свечением на концах.","price":179,"pv":"hat horns","grant":{"hat":"horns"}}
 ];
 
 /*

@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=9">
+<link rel="stylesheet" href="assets/css/style.css?v=10">
 <style>
   body { background: radial-gradient(120% 70% at 50% 0%, #15151a 0%, var(--bg) 60%); min-height: 100vh; }
   .adm { width: min(980px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 80px; }
@@ -119,16 +119,17 @@
 </main>
 <div class="toast" id="toast"></div>
 
-<script src="assets/js/products.js?v=9"></script>
+<script src="assets/js/products.js?v=10"></script>
 <script>
 (() => {
   const $ = (s) => document.querySelector(s);
   const SLOTS = [
-    ['cape', 'Плащ', [['glass', 'Стекло'], ['night', 'Ночь'], ['theme', 'Тема']]],
-    ['wings', 'Крылья', [['angel', 'Ангел'], ['demon', 'Демон'], ['theme', 'Тема']]],
-    ['halo', 'Нимб', [['light', 'Свет'], ['theme', 'Тема']]],
-    ['pet', 'Питомец', [['orb', 'Сфера'], ['cube', 'Куб'], ['crystal', 'Кристалл']]],
-    ['aura', 'Аура', [['sparks', 'Искры'], ['snow', 'Снег'], ['theme', 'Тема']]],
+    ['cape', 'Плащ', [['glass', 'Стекло'], ['night', 'Ночь'], ['theme', 'Тема'], ['aurora', 'Аврора'], ['flame', 'Пламя'], ['custom', 'Своя картинка']]],
+    ['wings', 'Крылья', [['angel', 'Ангел'], ['demon', 'Демон'], ['theme', 'Тема'], ['neon', 'Неон'], ['butterfly', 'Бабочка']]],
+    ['halo', 'Нимб', [['light', 'Свет'], ['theme', 'Тема'], ['stars', 'Звёздный'], ['double', 'Двойной']]],
+    ['hat', 'Головной убор', [['crown', 'Корона'], ['ears', 'Ушки'], ['horns', 'Рога']]],
+    ['pet', 'Питомец', [['orb', 'Сфера'], ['cube', 'Куб'], ['crystal', 'Кристалл'], ['star', 'Звезда'], ['heart', 'Сердце']]],
+    ['aura', 'Аура', [['sparks', 'Искры'], ['snow', 'Снег'], ['theme', 'Тема'], ['hearts', 'Сердечки'], ['flame', 'Пламя']]],
   ];
   const label = (key, val) => {
     const s = SLOTS.find((x) => x[0] === key);
