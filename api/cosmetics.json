@@ -7,7 +7,8 @@
     "testgrant1": {
       "client": "lifetime",
       "cape": "aurora",
-      "hat": "crown"
+      "hat": "crown",
+      "halo": "light"
     }
   }
 }
