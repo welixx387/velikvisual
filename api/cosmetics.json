@@ -1,5 +1,13 @@
 {
   "version": 1,
-  "admins": ["Wel1xx"],
-  "players": {}
+  "admins": [
+    "Wel1xx"
+  ],
+  "players": {
+    "testgrant1": {
+      "client": "lifetime",
+      "cape": "aurora",
+      "hat": "crown"
+    }
+  }
 }
