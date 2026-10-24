@@ -115,7 +115,7 @@
 
   // ------------------------------------------------------------ checkout
   // auto: ЮMoney + робот (.github/workflows/payments.yml) выдаёт покупку сам.
-  // manual: перевод на карту, код заказа в комментарии, выдача через admin.html.
+  // manual: перевод на карту, код заказа в комментарии, выдача через GitHub Actions → «Выдать покупку».
   const auto = !!cfg.yoomoneyWallet;
   const nickOk = (n) => /^[A-Za-z0-9_]{3,16}$/.test(n);
   const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

@@ -1,0 +1,81 @@
+name: Выдать покупку
+
+on:
+  workflow_dispatch:
+    inputs:
+      order:
+        description: 'Код заказа vv1.… из комментария к переводу (тогда остальное можно не заполнять)'
+        required: false
+      nick:
+        description: 'Ник в Minecraft'
+        required: false
+      client:
+        description: 'Клиент (активация навсегда)'
+        type: boolean
+        default: false
+      cape:
+        description: 'Плащ'
+        type: choice
+        options: ['не менять', glass, night, theme, aurora, flame, custom, 'убрать']
+      wings:
+        description: 'Крылья'
+        type: choice
+        options: ['не менять', angel, demon, theme, neon, butterfly, 'убрать']
+      halo:
+        description: 'Нимб'
+        type: choice
+        options: ['не менять', light, theme, stars, double, 'убрать']
+      hat:
+        description: 'Головной убор'
+        type: choice
+        options: ['не менять', crown, ears, horns, 'убрать']
+      pet:
+        description: 'Питомец'
+        type: choice
+        options: ['не менять', orb, cube, crystal, star, heart, 'убрать']
+      aura:
+        description: 'Аура'
+        type: choice
+        options: ['не менять', sparks, snow, theme, hearts, flame, 'убрать']
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: payments
+  cancel-in-progress: false
+
+jobs:
+  grant:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Записать покупку
+        id: grant
+        env:
+          ORDER: ${{ inputs.order }}
+          NICK: ${{ inputs.nick }}
+          CLIENT: ${{ inputs.client }}
+          CAPE: ${{ inputs.cape }}
+          WINGS: ${{ inputs.wings }}
+          HALO: ${{ inputs.halo }}
+          HAT: ${{ inputs.hat }}
+          PET: ${{ inputs.pet }}
+          AURA: ${{ inputs.aura }}
+        run: python3 tools/grant.py
+
+      - name: Опубликовать
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SUMMARY: ${{ steps.grant.outputs.summary }}
+        run: |
+          git config user.name "VelikVisual Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add api/cosmetics.json
+          git diff --cached --quiet && { echo "Ничего не изменилось"; exit 0; }
+          git commit -m "Grant: $SUMMARY"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent || true

@@ -2,275 +2,48 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Выдача покупок — VelikVisual</title>
-<meta name="theme-color" content="#050506">
-<link rel="icon" href="assets/img/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=10">
+<title>404</title>
 <style>
-  body { background: radial-gradient(120% 70% at 50% 0%, #15151a 0%, var(--bg) 60%); min-height: 100vh; }
-  .adm { width: min(980px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 80px; }
-  .adm header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
-  .adm header img { width: 44px; }
-  .adm header h1 { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(22px, 4vw, 30px); }
-  .adm header a { margin-left: auto; }
-  .card { padding: 24px; margin-bottom: 18px; }
-  .card h2 { margin: 0 0 6px; font-family: var(--display); font-weight: 600; font-size: 18px; display: flex; gap: 12px; align-items: center; }
-  .card h2 i { font-style: normal; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #000; font-size: 13px; font-family: var(--text); font-weight: 700; flex: none; }
-  .card > p { color: var(--dim); margin: 0 0 16px; font-size: 14.5px; }
-  textarea, .adm select, .adm input[type=text] { width: 100%; border-radius: 14px; border: 1px solid var(--line-2); background: rgba(0,0,0,.35); color: #fff; font: inherit; outline: none; transition: border .3s, box-shadow .3s; }
-  textarea { min-height: 150px; padding: 14px 16px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; resize: vertical; }
-  .adm select, .adm input[type=text] { height: 46px; padding: 0 14px; }
-  .adm select option { background: #111; }
-  textarea:focus, .adm select:focus, .adm input[type=text]:focus { border-color: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.08); }
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .grid label { display: grid; gap: 6px; font-size: 13px; color: var(--dim); }
-  .grid label.wide { grid-column: span 3; }
-  .chk { display: flex !important; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--line-2); background: rgba(0,0,0,.35); color: var(--ink-2) !important; font-size: 14px !important; cursor: pointer; align-self: end; }
-  .chk input { width: 18px; height: 18px; accent-color: #fff; }
-  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-  pre.json { margin: 0; max-height: 360px; overflow: auto; white-space: pre; font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: rgba(0,0,0,.45); border: 1px solid var(--line); border-radius: 14px; padding: 16px; color: var(--ink-2); }
-  .players { display: grid; gap: 8px; }
-  .pl { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 12px 12px 12px 16px; border-radius: 14px; background: rgba(255,255,255,.05); border: 1px solid var(--line); }
-  .pl b { font-size: 15px; } .pl small { display: block; color: var(--dim); font-size: 12.5px; margin-top: 2px; }
-  .pl .rm { width: 34px; height: 34px; border-radius: 50%; color: var(--dim); border: 1px solid var(--line); }
-  .pl .rm:hover { background: rgba(255,255,255,.1); color: #fff; }
-  .status { color: var(--dim); font-size: 13px; margin-top: 10px; min-height: 18px; }
-  .dirty { color: #fff; }
-  ol.how { margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 14.5px; display: grid; gap: 6px; }
-  ol.how b { color: #fff; }
-  @media (max-width: 720px) {
-    .grid { grid-template-columns: 1fr 1fr; }
-    .grid label.wide { grid-column: span 2; }
-  }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #050506; color: #8b8b95; font: 16px system-ui, sans-serif; text-align: center; }
+  h1 { color: #f4f4f6; font-size: 64px; margin: 0 0 8px; }
+  pre { max-width: min(90vw, 640px); white-space: pre-wrap; word-break: break-all; background: #111115; color: #f4f4f6; padding: 14px; border-radius: 12px; }
+  button { margin-top: 10px; padding: 10px 18px; border: 0; border-radius: 999px; background: #fff; color: #000; font-weight: 600; cursor: pointer; }
+  a { color: #f4f4f6; }
 </style>
 </head>
 <body>
-<main class="adm">
-  <header>
-    <img src="assets/img/logo.svg" alt="">
-    <h1>Выдача покупок</h1>
-    <a class="btn ghost sm" href="./">На сайт</a>
-  </header>
-
-  <section class="card glass" id="oauth" hidden>
-    <h2>Код подтверждения ЮMoney</h2>
-    <p id="oauthText">Скопируйте код и вставьте его в окно программы подключения (tools/connect_yoomoney.py).</p>
-    <pre class="json" id="oauthCode" style="white-space:pre-wrap;word-break:break-all"></pre>
-    <div class="actions"><button class="btn primary sm" id="oauthCopy">Скопировать код</button></div>
-  </section>
-
-  <section class="card glass">
-    <h2>Автооплата</h2>
-    <p id="autoText">Робот проверяет платежи ЮMoney каждые 5 минут и сам выдаёт покупки. Здесь — последние заказы.</p>
-    <div class="players" id="autoOrders"></div>
-    <div class="actions"><a class="btn ghost sm" href="https://github.com/welixx387/velikvisual/actions/workflows/payments.yml" target="_blank" rel="noopener">Журнал робота</a></div>
-  </section>
-
-  <section class="card glass">
-    <h2><i>1</i>Проверьте перевод</h2>
-    <p>Это нужно только для переводов на карту (без автооплаты). Покупатель вставляет в комментарий к переводу код заказа вида <b>vv1.Ник.….….</b>. Найдите перевод в приложении банка: сумма должна совпасть с суммой заказа.</p>
-  </section>
-
-  <section class="card glass">
-    <h2><i>2</i>Вставьте код заказа</h2>
-    <p>Вставьте комментарий к переводу или сообщение покупателя целиком — страница сама найдёт ник, товары и сумму.</p>
-    <textarea id="order" placeholder="vv1.Steve123.j.ab12"></textarea>
-    <div class="actions"><button class="btn primary sm" id="parse">Разобрать заказ</button></div>
-    <div class="status" id="parseStatus"></div>
-  </section>
-
-  <section class="card glass">
-    <h2><i>3</i>Проверьте и добавьте</h2>
-    <p>Можно выдать и вручную, без заказа. «Не менять» оставляет то, что у игрока уже есть.</p>
-    <div class="grid" id="form">
-      <label class="wide">Ник в Minecraft<input type="text" id="nick" maxlength="16" placeholder="Steve123" autocomplete="off"></label>
-    </div>
-    <div class="actions"><button class="btn primary sm" id="apply">Добавить игроку</button></div>
-    <div class="status" id="applyStatus"></div>
-  </section>
-
-  <section class="card glass">
-    <h2><i>4</i>Сохраните на GitHub</h2>
-    <ol class="how">
-      <li>Нажмите <b>«Скопировать JSON»</b>.</li>
-      <li>Нажмите <b>«Открыть файл на GitHub»</b>, выделите весь текст в редакторе (Ctrl+A) и вставьте скопированное (Ctrl+V).</li>
-      <li>Нажмите зелёную кнопку <b>«Commit changes…»</b>, затем ещё раз <b>«Commit changes»</b>.</li>
-      <li>Через 1–2 минуты сайт обновится, а игра подхватит покупку в течение 5 минут.</li>
-    </ol>
-    <div class="actions">
-      <button class="btn primary sm" id="copy">Скопировать JSON</button>
-      <a class="btn ghost sm" href="https://github.com/welixx387/velikvisual/edit/main/api/cosmetics.json" target="_blank" rel="noopener">Открыть файл на GitHub</a>
-      <button class="btn ghost sm" id="reload">Загрузить заново</button>
-    </div>
-    <div class="status" id="saveStatus"></div>
-    <pre class="json" id="json" style="margin-top:16px"></pre>
-  </section>
-
-  <section class="card glass">
-    <h2>Игроки с покупками</h2>
-    <p>Крестик убирает игрока из списка (после сохранения на GitHub).</p>
-    <div class="players" id="players"></div>
-  </section>
-</main>
-<div class="toast" id="toast"></div>
-
-<script src="assets/js/products.js?v=10"></script>
+<main id="main"><h1>404</h1><p>Страница не найдена. <a href="/">На главную</a></p></main>
 <script>
+// Only the ЮMoney connection uses this page (redirect URI of the VelikVisual app in ЮMoney):
+// admin.html#connect=<client_id> starts it, ЮMoney returns here with ?code=..., which goes to
+// tools/connect_yoomoney.py --listen on the owner's computer. Purchases are granted in GitHub
+// (Actions → «Выдать покупку»), not here.
 (() => {
-  const $ = (s) => document.querySelector(s);
-  const SLOTS = [
-    ['cape', 'Плащ', [['glass', 'Стекло'], ['night', 'Ночь'], ['theme', 'Тема'], ['aurora', 'Аврора'], ['flame', 'Пламя'], ['custom', 'Своя картинка']]],
-    ['wings', 'Крылья', [['angel', 'Ангел'], ['demon', 'Демон'], ['theme', 'Тема'], ['neon', 'Неон'], ['butterfly', 'Бабочка']]],
-    ['halo', 'Нимб', [['light', 'Свет'], ['theme', 'Тема'], ['stars', 'Звёздный'], ['double', 'Двойной']]],
-    ['hat', 'Головной убор', [['crown', 'Корона'], ['ears', 'Ушки'], ['horns', 'Рога']]],
-    ['pet', 'Питомец', [['orb', 'Сфера'], ['cube', 'Куб'], ['crystal', 'Кристалл'], ['star', 'Звезда'], ['heart', 'Сердце']]],
-    ['aura', 'Аура', [['sparks', 'Искры'], ['snow', 'Снег'], ['theme', 'Тема'], ['hearts', 'Сердечки'], ['flame', 'Пламя']]],
-  ];
-  const label = (key, val) => {
-    const s = SLOTS.find((x) => x[0] === key);
-    if (!s) return key === 'client' ? 'Клиент' : `${key}: ${val}`;
-    const st = s[2].find((x) => x[0] === val);
-    return `${s[1]} «${st ? st[1] : val}»`;
-  };
-
-  let data = { version: 1, admins: [], players: {} };
-  let dirty = false;
-
-  let toastTimer;
-  const toast = (msg) => {
-    const t = $('#toast');
-    t.textContent = msg;
-    t.classList.add('on');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('on'), 2400);
-  };
-  const copy = async (text) => {
-    try { await navigator.clipboard.writeText(text); } catch (e) {
-      const ta = document.createElement('textarea');
-      ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
-    }
-  };
-
-  // form
-  const form = $('#form');
-  for (const [key, name, styles] of SLOTS) {
-    const l = document.createElement('label');
-    l.innerHTML = `${name}<select data-slot="${key}"><option value="">Не менять</option>${styles.map(([v, n]) => `<option value="${v}">${n}</option>`).join('')}<option value="-">Убрать</option></select>`;
-    form.appendChild(l);
-  }
-  const ck = document.createElement('label');
-  ck.className = 'chk';
-  ck.innerHTML = '<input type="checkbox" id="client"> Клиент (отправить файл в чат)';
-  form.appendChild(ck);
-
-  function render() {
-    $('#json').textContent = JSON.stringify(data, null, 2);
-    const names = Object.keys(data.players).sort();
-    $('#players').innerHTML = names.length ? names.map((n) => {
-      const p = data.players[n];
-      const items = Object.entries(p).map(([k, v]) => label(k, v)).join(', ') || 'ничего';
-      return `<div class="pl"><div><b>${n}</b><small>${items}</small></div><button class="rm" data-rm="${n}" aria-label="Убрать">&times;</button></div>`;
-    }).join('') : '<p class="status">Пока никого.</p>';
-    $('#saveStatus').textContent = dirty ? 'Есть несохранённые изменения — скопируйте JSON и сохраните на GitHub.' : 'Список совпадает с опубликованным файлом.';
-    $('#saveStatus').classList.toggle('dirty', dirty);
-  }
-
-  async function load() {
-    try {
-      const r = await fetch(`api/cosmetics.json?t=${Date.now()}`, { cache: 'no-store' });
-      data = await r.json();
-      data.players = data.players || {};
-      dirty = false;
-      render();
-    } catch (e) {
-      $('#saveStatus').textContent = 'Не удалось загрузить api/cosmetics.json — откройте страницу с сайта.';
-    }
-  }
-
-  $('#parse').addEventListener('click', () => {
-    const t = $('#order').value;
-    const found = (t.match(/vv1\.[A-Za-z0-9_]{3,16}\.[0-9a-z]+\.[0-9a-z]{2,8}/) || [])[0];
-    const o = window.VV_ORDER.decode(found);
-    if (!o) {
-      $('#parseStatus').textContent = 'Не нашёл код заказа вида vv1.Ник.….…. Проверьте, что он скопирован целиком.';
-      return;
-    }
-    const grant = Object.assign({}, ...o.items.map((p) => p.grant));
-    $('#nick').value = o.nick;
-    form.querySelectorAll('select').forEach((s) => { s.value = grant[s.dataset.slot] || ''; });
-    $('#client').checked = !!grant.client;
-    $('#parseStatus').textContent = `Ник ${o.nick}: ${o.items.map((p) => p.name).join(', ')}. Сумма заказа ${o.sum} ₽ — сверьте с переводом и нажмите «Добавить игроку».`;
-  });
-
-  // ЮMoney OAuth: сюда возвращает после «Разрешить» (tools/connect_yoomoney.py)
   const qs = new URLSearchParams(location.search);
-  // admin.html#connect=<client_id>: код сразу уходит программе подключения на этом компьютере
-  // (python tools/connect_yoomoney.py --listen <client_id>), код ЮMoney живёт меньше минуты.
   const cm = /^#connect=([0-9A-Fa-f]+)$/.exec(location.hash);
   if (cm) {
     try { sessionStorage.setItem('vvLocalConnect', '1'); } catch (e) { /* private mode */ }
     location.replace(`https://yoomoney.ru/oauth/authorize?${new URLSearchParams({ client_id: cm[1], response_type: 'code', redirect_uri: `${location.origin}/admin.html`, scope: 'account-info operation-history' })}`);
+    return;
   }
+  if (!qs.has('code') && !qs.has('error')) return;
   let toLocal = false;
-  if (!cm && (qs.has('code') || qs.has('error'))) {
-    try { toLocal = sessionStorage.getItem('vvLocalConnect') === '1'; sessionStorage.removeItem('vvLocalConnect'); } catch (e) { /* private mode */ }
+  try { toLocal = sessionStorage.getItem('vvLocalConnect') === '1'; sessionStorage.removeItem('vvLocalConnect'); } catch (e) { /* private mode */ }
+  if (toLocal) {
+    location.replace(`http://127.0.0.1:8765/cb?${qs}`);
+    return;
   }
-  if (toLocal) location.replace(`http://127.0.0.1:8765/cb?${qs}`);
-  if (qs.has('code') || qs.has('error')) {
-    $('#oauth').hidden = false;
-    if (qs.has('code')) $('#oauthCode').textContent = qs.get('code');
-    else { $('#oauthText').textContent = `ЮMoney вернул ошибку: ${qs.get('error_description') || qs.get('error')}. Запустите подключение ещё раз.`; $('#oauthCopy').hidden = true; }
-    $('#oauthCopy').addEventListener('click', async () => { await copy(qs.get('code')); toast('Код скопирован'); });
+  const main = document.getElementById('main');
+  if (qs.has('error')) {
+    main.innerHTML = '<p></p>';
+    main.firstChild.textContent = `ЮMoney вернул ошибку: ${qs.get('error_description') || qs.get('error')}`;
+    return;
   }
-
-  async function loadOrders() {
-    try {
-      const r = await fetch(`api/orders.json?t=${Date.now()}`, { cache: 'no-store' });
-      const book = (await r.json()).orders || {};
-      const list = Object.entries(book).sort((a, b) => String(b[1].at).localeCompare(String(a[1].at))).slice(0, 20);
-      const name = (id) => (window.VV_PRODUCTS.find((p) => p.id === id) || { name: id }).name;
-      $('#autoOrders').innerHTML = list.length ? list.map(([code, o]) => `<div class="pl"><div><b>${o.nick} — ${o.status === 'granted' ? 'выдано' : 'сумма меньше цены, не выдано'}</b><small>${o.items.map(name).join(', ')} · ${new Date(o.at).toLocaleString('ru-RU')} · ${code}</small></div></div>`).join('') : '<p class="status">Автоматических заказов пока не было.</p>';
-    } catch (e) {
-      $('#autoOrders').innerHTML = '<p class="status">Не удалось загрузить api/orders.json.</p>';
-    }
-  }
-  loadOrders();
-
-  $('#apply').addEventListener('click', () => {
-    const nick = $('#nick').value.trim();
-    if (!/^[A-Za-z0-9_]{3,16}$/.test(nick)) { toast('Ник: 3–16 символов, латиница, цифры и _'); $('#nick').focus(); return; }
-    const key = nick.toLowerCase();
-    const p = Object.assign({}, data.players[key]);
-    form.querySelectorAll('select').forEach((s) => {
-      if (s.value === '-') delete p[s.dataset.slot];
-      else if (s.value) p[s.dataset.slot] = s.value;
-    });
-    if ($('#client').checked) p.client = 'lifetime';
-    data.players[key] = p;
-    dirty = true;
-    render();
-    $('#applyStatus').textContent = `${nick}: ${Object.entries(p).map(([k, v]) => label(k, v)).join(', ') || 'ничего'}. Теперь сохраните на GitHub (шаг 4).`;
-    toast('Добавлено — не забудьте сохранить');
-  });
-
-  $('#players').addEventListener('click', (e) => {
-    const b = e.target.closest('[data-rm]');
-    if (!b) return;
-    delete data.players[b.dataset.rm];
-    dirty = true;
-    render();
-  });
-
-  $('#copy').addEventListener('click', async () => { await copy(JSON.stringify(data, null, 2) + '\n'); toast('JSON скопирован'); });
-  $('#reload').addEventListener('click', load);
-  addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
-
-  load();
+  main.innerHTML = '<p>Код подтверждения ЮMoney для программы подключения:</p><pre></pre><button>Скопировать код</button>';
+  main.querySelector('pre').textContent = qs.get('code');
+  main.querySelector('button').onclick = () => navigator.clipboard.writeText(qs.get('code'));
 })();
 </script>
 </body>
