@@ -3,12 +3,5 @@
   "admins": [
     "Wel1xx"
   ],
-  "players": {
-    "testgrant1": {
-      "client": "lifetime",
-      "cape": "aurora",
-      "hat": "crown",
-      "halo": "light"
-    }
-  }
+  "players": {}
 }
