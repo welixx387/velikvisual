@@ -11,8 +11,8 @@ on:
         required: false
       client:
         description: 'Клиент (активация навсегда)'
-        type: boolean
-        default: false
+        type: choice
+        options: ['не менять', 'выдать', 'убрать']
       cape:
         description: 'Плащ'
         type: choice

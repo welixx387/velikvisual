@@ -39,8 +39,10 @@ def main():
     key = nick.lower()
     player = dict(players.get(key) or {})
     player.update(grant)
-    if env('CLIENT') == 'true':
+    if env('CLIENT') in ('выдать', 'true'):
         player['client'] = 'lifetime'
+    elif env('CLIENT') == REMOVE:
+        player.pop('client', None)
     for slot in SLOTS:
         v = env(slot.upper())
         if not v or v == KEEP:
