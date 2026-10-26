@@ -5,7 +5,13 @@
   ],
   "players": {
     "kolbaca22": {
-      "client": "lifetime"
+      "client": "lifetime",
+      "cape": "aurora",
+      "wings": "angel",
+      "halo": "stars",
+      "hat": "crown",
+      "pet": "star",
+      "aura": "sparks"
     }
   }
 }
