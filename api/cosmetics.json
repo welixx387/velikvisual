@@ -3,5 +3,9 @@
   "admins": [
     "Wel1xx"
   ],
-  "players": {}
+  "players": {
+    "kolbaca22": {
+      "client": "lifetime"
+    }
+  }
 }
